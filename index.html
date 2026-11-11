@@ -1,0 +1,2129 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>5С для кухни — Friendly Isometric</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --primary: #00A896;
+    --secondary-bg: #E0F7F5;
+    --dark-til: #028090;
+    --accent-coral: #FF8A65;
+    --base-cream: #FDFBF7;
+    --text-graphite: #264653;
+    --shadow-color: #007F73;
+    --border-color: #264653;
+    
+    --font-heading: 'Nunito', sans-serif;
+    --font-body: 'Manrope', sans-serif;
+    --radius: 16px;
+    --radius-sm: 12px;
+    --solid-shadow: 6px 6px 0px var(--shadow-color);
+    --solid-shadow-sm: 4px 4px 0px var(--shadow-color);
+  }
+  
+  *{box-sizing:border-box;margin:0;padding:0}
+  
+  html, body { height: 100%; overflow: hidden; } 
+  
+  body{
+    font-family: var(--font-body);
+    background-color: var(--base-cream); 
+    color: var(--text-graphite);
+    line-height: 1.5;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+
+  body::before {
+    content: "";
+    position: absolute; inset: 0;
+    background-image: radial-gradient(var(--secondary-bg) 1.5px, transparent 1.5px);
+    background-size: 24px 24px;
+    opacity: 0.6;
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  h1, h2, h3 { font-family: var(--font-heading); color: var(--dark-til); line-height: 1.2; }
+  h1 { font-size: clamp(26px, 4vw, 36px); margin-bottom: 20px; font-weight: 800; }
+  h2 { font-size: clamp(22px, 3vw, 28px); margin-bottom: 16px; font-weight: 800; }
+  p { margin-bottom: 16px; font-size: clamp(16px, 2vw, 20px); font-weight: 500; line-height: 1.6; }
+  ul, ol { margin: 0 0 16px 24px; }
+  li { margin-bottom: 8px; font-weight: 500; font-size: clamp(16px, 2vw, 20px); line-height: 1.5; }
+
+  .text-fill-coral {
+    background: var(--accent-coral); color: #fff; padding: 2px 12px; border-radius: 8px;
+    display: inline-block; box-shadow: 4px 4px 0 var(--border-color); transform: rotate(-1deg); margin-top: 4px;
+  }
+  .highlight-text {
+    background: linear-gradient(120deg, rgba(255,138,101,0.3) 0%, rgba(255,138,101,0.3) 100%);
+    border-radius: 4px; padding: 0 4px; font-weight: 700; color: var(--text-graphite);
+  }
+
+  /* === ШАПКА === */
+  header{
+    background: var(--base-cream);
+    border-bottom: 2px solid var(--border-color);
+    padding: 12px 24px;
+    flex-shrink: 0;
+    z-index: 50;
+  }
+  .header-inner{ width: 100%; display: flex; align-items: center; gap: 16px; }
+  .logo{ font-family: var(--font-heading); font-weight: 900; color: var(--dark-til); font-size: 20px; text-transform: uppercase; letter-spacing: 1px; white-space: nowrap; }
+  .header-module { font-size: 13px; font-weight: 700; color: var(--dark-til); background: var(--secondary-bg); border: 2px solid var(--primary); padding: 4px 12px; border-radius: 99px; white-space: nowrap; margin-left: 8px; }
+  .progress-wrap{ flex: 1; max-width: 400px; margin-left: auto; }
+  .progress-label{ font-size: 14px; font-weight: 700; color: var(--text-graphite); margin-bottom: 4px; text-align: right; }
+  .progress-bar-bg { height: 12px; background: var(--secondary-bg); border: 2px solid var(--border-color); border-radius: 99px; overflow: hidden; }
+  .progress-fill { height: 100%; width: 0; background: var(--primary); border-radius: 99px; transition: width .35s ease; }
+
+  /* Контент */
+  main { flex: 1; width: 100%; display: flex; flex-direction: column; position: relative; overflow: hidden; }
+  
+  .slide {
+    display: none; position: absolute; inset: 0; width: 100%;
+    padding: 20px 24px 90px; overflow-y: auto; animation: fadeIn 0.4s ease;
+  }
+  .slide.active { display: block; } 
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+  
+  #slide-test.active { display: flex; flex-direction: column; padding-bottom: 20px; overflow: hidden; }
+  
+  .slide-content { max-width: 1100px; margin: 0 auto; width: 100%; display: flex; flex-direction: column; position: relative; z-index: 2; min-height: 100%; }
+  .slide-content.cover { justify-content: center; align-items: center; text-align: center; }
+
+  .cover-title { font-size: clamp(38px, 6vw, 66px); line-height: 1.1; margin-bottom: 24px; color: var(--dark-til); font-weight: 900; }
+  .cover-subtitle { font-size: clamp(18px, 2.5vw, 24px); color: var(--text-graphite); max-width: 700px; margin: 0 auto; font-weight: 500; line-height: 1.4; }
+  .module-cover-number { font-size: clamp(60px, 10vw, 100px); font-weight: 900; color: var(--secondary-bg); line-height: 1; margin-bottom: 10px; text-shadow: 3px 3px 0 var(--primary); }
+
+  .callout { background: var(--secondary-bg); border: 2px solid var(--primary); border-radius: var(--radius); padding: 16px 20px; margin: 16px 0; font-size: clamp(16px, 2vw, 20px); font-weight: 600; color: var(--text-graphite); box-shadow: var(--solid-shadow-sm); position: relative; z-index: 2; line-height: 1.5; }
+
+  table { width: 100%; border-collapse: separate; border-spacing: 0 6px; margin: 10px 0; font-size: clamp(14px, 1.8vw, 18px); }
+  th { font-family: var(--font-heading); font-size: clamp(12px, 1.5vw, 16px); text-transform: uppercase; color: var(--dark-til); padding: 0 16px 4px; text-align: left; }
+  td { background: var(--base-cream); border: 2px solid var(--border-color); padding: 10px 16px; font-weight: 500; line-height: 1.4; }
+  td:first-child { border-top-left-radius: var(--radius-sm); border-bottom-left-radius: var(--radius-sm); font-weight: 700; border-right: none; }
+  td:last-child { border-top-right-radius: var(--radius-sm); border-bottom-right-radius: var(--radius-sm); border-left: none; }
+  tr:hover td { background: var(--secondary-bg); }
+
+  .checklist { list-style: none; margin: 12px 0; padding: 0; }
+  .checklist li { display: flex; gap: 12px; align-items: flex-start; padding: 10px 16px; background: var(--base-cream); border: 2px solid var(--border-color); border-radius: var(--radius-sm); margin-bottom: 8px; box-shadow: 2px 2px 0 var(--border-color); font-size: clamp(14px, 1.8vw, 18px); line-height: 1.4; cursor: pointer; user-select: none; transition: all 0.15s ease; }
+  .checklist li:hover { background: var(--secondary-bg); }
+  .checklist input { margin-top: 4px; width: 20px; height: 20px; accent-color: var(--primary); cursor: pointer; flex-shrink: 0; }
+
+  nav.footer { position: fixed; bottom: 20px; left: 0; right: 0; padding: 0 24px; display: flex; justify-content: space-between; align-items: center; pointer-events: none; z-index: 100; transition: opacity 0.3s ease; }
+  nav.footer.hidden { opacity: 0; pointer-events: none; }
+  
+  .btn { pointer-events: auto; display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: var(--primary); color: #fff; font-family: var(--font-heading); font-weight: 800; font-size: 18px; padding: 12px 24px; border: 2px solid var(--border-color); border-radius: var(--radius-sm); cursor: pointer; box-shadow: var(--solid-shadow-sm); transition: all 0.15s ease; }
+  .btn:hover:not(:disabled) { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--border-color); }
+  .btn.ghost { background: var(--base-cream); color: var(--text-graphite); }
+  .btn.ghost:hover:not(:disabled) { background: var(--secondary-bg); }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: var(--solid-shadow-sm); }
+  .btn.large { font-size: 20px; padding: 16px 32px; margin-top: 24px; }
+
+  .content-split { display: flex; align-items: flex-start; gap: 60px; margin-top: 10px; }
+  .text-side { flex: 1.1; max-width: 600px; display: flex; flex-direction: column; }
+  .illustration-side { flex: 1; display: flex; justify-content: flex-end; position: relative; padding-top: 20px; }
+  
+  .image-wrapper { position: relative; width: 100%; max-width: 480px; }
+
+  .chaos-img {
+    width: 100%; height: auto; aspect-ratio: 4/3; object-fit: cover;
+    border-radius: var(--radius); border: 3px solid var(--border-color);
+    box-shadow: 6px 6px 0 var(--shadow-color); transform: rotate(1.5deg);
+    transition: transform 0.3s ease; display: block;
+  }
+  .chaos-img:hover { transform: rotate(0deg) scale(1.02); }
+
+  .toast {
+    position: absolute; bottom: -20px; right: -20px;
+    width: 90%; max-width: 320px;
+    background: rgba(253, 251, 247, 0.95); backdrop-filter: blur(8px);
+    border: 2px solid var(--primary); border-radius: var(--radius);
+    padding: 16px; z-index: 10; box-shadow: 4px 4px 0 rgba(38,70,83,0.2);
+    transform: rotate(-2deg); transition: transform 0.3s;
+  }
+  .toast:hover { transform: rotate(0deg) scale(1.02); }
+  .toast-text { font-size: 13px; font-weight: 600; color: var(--border-color); line-height: 1.3; }
+  .toast-text strong { color: var(--accent-coral); }
+
+  /* УВЕЛИЧЕННЫЕ КРУГИ И ШАГИ */
+  .circle-container { position: relative; width: min(65vw, calc(100vh - 220px)); height: min(65vw, calc(100vh - 220px)); margin: 10px auto 20px; display: flex; align-items: center; justify-content: center; }
+  .center-circle { position: absolute; width: 34%; height: 34%; border-radius: 50%; background: var(--primary); color: #fff; display: flex; align-items: center; justify-content: center; font-family: var(--font-heading); font-size: clamp(28px, 4.5vw, 44px); font-weight: 900; border: 3px solid var(--border-color); box-shadow: var(--solid-shadow); z-index: 10; opacity: 0; transform: scale(0.6); animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.1s forwards; }
+  .step-wrapper { position: absolute; width: 100%; height: 100%; display: flex; justify-content: center; pointer-events: none; }
+  .step-1 { transform: rotate(0deg); } .step-2 { transform: rotate(72deg); } .step-3 { transform: rotate(144deg); } .step-4 { transform: rotate(216deg); } .step-5 { transform: rotate(288deg); }
+  .step-circle { pointer-events: auto; position: absolute; top: 0; width: 29%; height: 29%; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #fff; font-family: var(--font-heading); text-align: center; border: 3px solid var(--border-color); box-shadow: 4px 4px 0 var(--border-color); transform: rotate(calc(var(--angle) * -1)); transition: transform 0.3s, box-shadow 0.2s; padding: 4px; cursor: pointer; opacity: 0; }
+  .step-circle:hover { transform: rotate(calc(var(--angle) * -1)) scale(1.15); box-shadow: 6px 6px 0 var(--border-color); z-index: 20; }
+  .step-1 .step-circle { --angle: 0deg; background: var(--dark-til); animation: stepIn 0.5s ease 0.3s forwards; }
+  .step-2 .step-circle { --angle: 72deg; background: var(--primary); animation: stepIn 0.5s ease 0.6s forwards; }
+  .step-3 .step-circle { --angle: 144deg; background: var(--accent-coral); animation: stepIn 0.5s ease 0.9s forwards; }
+  .step-4 .step-circle { --angle: 216deg; background: var(--primary); animation: stepIn 0.5s ease 1.2s forwards; }
+  .step-5 .step-circle { --angle: 288deg; background: var(--dark-til); animation: stepIn 0.5s ease 1.5s forwards; }
+  .step-num { font-size: clamp(18px, 3.2vw, 28px); font-weight: 900; line-height: 1; margin-bottom: 4px; }
+  
+  .step-title { 
+    font-size: clamp(11px, 1.4vw, 14px); 
+    line-height: 1.1; 
+    font-weight: 800; 
+    word-break: keep-all; 
+    hyphens: none; 
+    padding: 0 2px; 
+  }
+
+  .arrow-wrapper { position: absolute; width: 100%; height: 100%; display: flex; justify-content: center; pointer-events: none; }
+  .arrow-1 { transform: rotate(36deg); } .arrow-2 { transform: rotate(108deg); } .arrow-3 { transform: rotate(180deg); } .arrow-4 { transform: rotate(252deg); } .arrow-5 { transform: rotate(324deg); }
+  .arrow { position: absolute; top: 18%; width: 0; height: 0; border-style: solid; border-width: 8px 0 8px 14px; border-color: transparent transparent transparent var(--accent-coral); margin-left: -7px; transform: rotate(90deg); opacity: 0; }
+  .arrow-1 .arrow { animation: arrowIn 0.4s ease 0.5s forwards; } .arrow-2 .arrow { animation: arrowIn 0.4s ease 0.8s forwards; }
+  .arrow-3 .arrow { animation: arrowIn 0.4s ease 1.1s forwards; } .arrow-4 .arrow { animation: arrowIn 0.4s ease 1.4s forwards; }
+  .arrow-5 .arrow { animation: arrowIn 0.4s ease 1.7s forwards; }
+  @keyframes popIn { to { opacity: 1; transform: scale(1); } }
+  @keyframes stepIn { to { opacity: 1; transform: rotate(calc(var(--angle) * -1)) scale(1); } }
+  @keyframes arrowIn { to { opacity: 1; transform: scale(1) rotate(90deg); } }
+
+  /* ТУЛТИПЫ С ВАШИМИ КООРДИНАТАМИ */
+  .tooltip { 
+    position: absolute; 
+    width: 280px; 
+    background: var(--base-cream); 
+    border: 2px solid var(--border-color); 
+    border-radius: var(--radius-sm); 
+    padding: 16px; 
+    box-shadow: var(--solid-shadow-sm); 
+    pointer-events: none; 
+    opacity: 0; 
+    transform: translateY(10px) scale(0.95); 
+    transition: opacity 0.2s ease, transform 0.2s ease; 
+    z-index: 100; 
+    text-align: left; 
+  }
+  .tooltip.visible { opacity: 1; transform: translateY(0) scale(1); }
+  
+  .tooltip[data-step="1"] { top: 12px; left: -293px; }
+  .tooltip[data-step="2"] { top: 58px; left: 584px; }
+  .tooltip[data-step="3"] { top: 343px; left: 529px; }
+  .tooltip[data-step="4"] { top: 327px; left: -256px; }
+  .tooltip[data-step="5"] { top: 103px; left: -304px; }
+
+  .tooltip h4 { font-family: var(--font-heading); font-size: 17px; margin-bottom: 8px; color: var(--dark-til); display: flex; align-items: center; gap: 8px; }
+  .tooltip p { font-size: clamp(13px, 1.5vw, 15px); color: var(--text-graphite); margin: 0; line-height: 1.4; font-weight: 500;}
+  .tooltip .color-dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; flex-shrink: 0; border: 1px solid var(--border-color); }
+  
+  .tooltip::after { content: ""; position: absolute; width: 10px; height: 10px; background: var(--base-cream); border-right: 2px solid var(--border-color); border-bottom: 2px solid var(--border-color); transform: rotate(45deg); }
+  .tooltip.pos-right::after { left: -7px; top: 50%; margin-top: -5px; transform: rotate(135deg); }
+  .tooltip.pos-left::after { right: -7px; top: 50%; margin-top: -5px; transform: rotate(-45deg); }
+
+  /* =========================================
+     ФЛИП-КАРТОЧКИ (4-й слайд)
+     ========================================= */
+  .flip-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin: 24px auto; width: 100%; max-width: 900px; }
+  .flip-card { position: relative; width: 100%; height: 260px; cursor: pointer; perspective: 1000px; }
+  .flip-card-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.6s; transform-style: preserve-3d; }
+  @media (hover: hover) { .flip-card:hover .flip-card-inner { transform: rotateY(180deg); } }
+  .flip-card.flipped .flip-card-inner { transform: rotateY(180deg); }
+  .flip-card-front, .flip-card-back { position: absolute; top: 0; left: 0; width: 100%; height: 100%; backface-visibility: hidden; border-radius: var(--radius); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 16px; border: 2px solid var(--border-color); box-shadow: var(--solid-shadow-sm); }
+  .flip-card-front { background: var(--base-cream); color: var(--text-graphite); }
+  .flip-card:hover .flip-card-front { background: var(--secondary-bg); }
+  
+  .flip-card-front .icon-wrap { width: 90px; height: 90px; display: flex; align-items: center; justify-content: center; margin-bottom: 16px; background: transparent; border: none; box-shadow: none; }
+  .flip-card-front .icon-wrap img { width: 100%; height: 100%; object-fit: contain; transform: scale(1.1); }
+  .flip-card-front .title { font-family: var(--font-heading); font-weight: 800; font-size: 20px; color: var(--dark-til); }
+  .flip-card-back { background: var(--primary); color: #fff; transform: rotateY(180deg); }
+  .flip-card-back .desc { font-size: clamp(13px, 1.5vw, 14px); line-height: 1.4; font-weight: 600; }
+
+  /* =========================================
+     ПЛАН КУРСА (НОВЫЙ)
+     ========================================= */
+  .plan-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    width: 100%;
+  }
+
+  .module-card {
+    background: var(--base-cream);
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: var(--solid-shadow-sm);
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .module-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--solid-shadow);
+  }
+
+  .module-card.locked {
+    opacity: 0.7;
+    background: #f5f5f5;
+    cursor: not-allowed;
+  }
+
+  .module-card.locked:hover {
+    transform: none;
+    box-shadow: var(--solid-shadow-sm);
+  }
+
+  .lock-icon {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 24px;
+    height: 24px;
+    fill: var(--text-graphite);
+    opacity: 0.4;
+  }
+
+  .module-num {
+    font-family: var(--font-heading);
+    font-size: 32px;
+    font-weight: 900;
+    color: var(--primary);
+    line-height: 1;
+    flex-shrink: 0;
+    opacity: 0.8;
+  }
+
+  .module-info h3 {
+    font-family: var(--font-heading);
+    font-size: 20px;
+    color: var(--dark-til);
+    margin-bottom: 6px;
+    font-weight: 800;
+  }
+
+  .module-info p {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-graphite);
+    line-height: 1.4;
+    margin: 0;
+  }
+
+  /* =========================================
+     ТЕСТ
+     ========================================= */
+  .test-card { 
+    background: var(--base-cream); 
+    border: 2px solid var(--border-color); 
+    border-radius: var(--radius); 
+    box-shadow: 6px 6px 0 var(--shadow-color); 
+    padding: 30px 40px; 
+    display: none; 
+    position: relative; 
+    width: 100%; 
+    height: calc(100vh - 140px); 
+    max-height: 700px; 
+    flex-direction: column; 
+    animation: fadeIn 0.4s ease; 
+    max-width: 1000px; 
+    margin: 0 auto; 
+    overflow: visible;
+  }
+  
+  .test-card.active { display: flex; }
+  
+  .test-decor-diamond { position: absolute; top: -14px; right: 24px; width: 28px; height: 28px; background: var(--accent-coral); border: 3px solid var(--border-color); border-radius: 5px; transform: rotate(45deg); box-shadow: 3px 3px 0 var(--border-color); z-index: 5; }
+  
+  .test-options { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; flex-shrink: 0; }
+  .test-option { display: flex; align-items: flex-start; gap: 12px; padding: 12px 16px; background: var(--base-cream); border: 2px solid var(--border-color); border-radius: var(--radius-sm); cursor: pointer; box-shadow: 2px 2px 0 var(--border-color); font-size: 14px; font-weight: 600; transition: all 0.2s ease; user-select: none; }
+  .test-option:hover { transform: translate(2px, 2px); box-shadow: 0 0 0 var(--border-color); background: var(--secondary-bg); }
+  .test-option input { display: none; }
+  
+  .test-option .radio-mark { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--border-color); display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.2s; margin-top: 2px; }
+  .test-option .radio-mark::after { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--primary); transform: scale(0); transition: transform 0.2s; }
+  
+  .test-option input[type="radio"]:checked ~ .radio-mark { border-color: var(--primary); }
+  .test-option input[type="radio"]:checked ~ .radio-mark::after { transform: scale(1); }
+  
+  .test-option.checkbox-option .radio-mark { border-radius: 4px; }
+  .test-option.checkbox-option .radio-mark::after { border-radius: 2px; width: 12px; height: 12px; }
+  .test-option input[type="checkbox"]:checked ~ .radio-mark { border-color: var(--primary); background: var(--primary); }
+  .test-option input[type="checkbox"]:checked ~ .radio-mark::after { background: #fff; transform: scale(1); }
+
+  .test-explanation { display: none; background: var(--secondary-bg); border-left: 4px solid var(--primary); padding: 12px 16px; border-radius: 0 var(--radius-sm) var(--radius-sm) 0; font-size: 14px; font-weight: 500; color: var(--text-graphite); animation: fadeIn 0.3s ease; margin-bottom: 10px; line-height: 1.4; flex-shrink: 0; }
+  .test-explanation.show { display: block; }
+  .test-explanation a { color: var(--primary); text-decoration: underline; font-weight: 700; }
+  
+  .test-btn-next { display: none; background: var(--primary); color: #fff; font-family: var(--font-heading); font-weight: 800; font-size: 18px; padding: 12px 24px; border: 2px solid var(--border-color); border-radius: var(--radius-sm); cursor: pointer; box-shadow: 4px 4px 0 var(--shadow-color); transition: all 0.15s ease; margin-top: auto; align-self: flex-end; }
+  .test-btn-next:hover { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--shadow-color); }
+  .test-btn-next.show { display: inline-block; }
+
+  /* Интерактив (9-й вопрос) */
+  .test-find-scene { position: relative; width: 100%; max-width: 700px; aspect-ratio: 16/9; background: url('kitchen-quiz.jpg') center center / 100% 100% no-repeat; border-radius: var(--radius); overflow: hidden; margin: 0 auto 15px; box-shadow: 2px 2px 0 var(--border-color); border: 2px solid var(--border-color); flex-shrink: 0; }
+  .test-hotspot { position: absolute; width: 44px; height: 44px; border-radius: 50%; background: rgba(253, 251, 247, 0.4); border: 3px solid rgba(38, 70, 83, 0.5); cursor: pointer; transition: all .2s; display: flex; align-items: center; justify-content: center; font-size: 18px; color: transparent; box-shadow: 2px 2px 0 rgba(38, 70, 83, 0.3); transform: translate(-50%, -50%); }
+  .test-hotspot:hover { background: rgba(255, 138, 101, 0.9); border-color: var(--border-color); color: #fff; transform: translate(-50%, -50%) scale(1.1); }
+  .test-hotspot.correct { background: var(--primary); border-color: var(--border-color); color: #fff; cursor: default; box-shadow: inset 2px 2px 0 rgba(0,0,0,0.2); transform: translate(-50%, -50%) scale(1); }
+  .test-hotspot.wrong { background: var(--accent-coral); border-color: var(--border-color); color: #fff; animation: shake .3s; }
+  @keyframes shake { 0%,100% { transform: translate(-50%, -50%) translateX(0); } 25% { transform: translate(-50%, -50%) translateX(-6px); } 75% { transform: translate(-50%, -50%) translateX(6px); } }
+  
+  .test-find-result { font-weight: 700; margin-bottom: 10px; font-size: 15px; text-align: center; flex-shrink: 0; }
+  .test-find-result.ok { color: var(--primary); }
+  .test-find-result.err { color: var(--accent-coral); }
+
+  /* Фиксируем высоту блока для 9 вопроса */
+  #exp9 { height: 50px; overflow-y: auto; margin-bottom: 10px; }
+  #exp9::-webkit-scrollbar { width: 6px; }
+  #exp9::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 3px; }
+
+  /* =========================================
+     КНОПКА ПОКАЗАТЬ РЕЗУЛЬТАТ С ТОЧНЫМИ КООРДИНАТАМИ
+     ========================================= */
+  #btn9 { position: absolute; top: 569px; left: 720px; margin: 0; align-self: auto; display: none; }
+
+  /* =========================================
+     ВСПЛЫВАЮЩЕЕ ОКНО (ПОПАП)
+     ========================================= */
+  .hotspot-popup { position: fixed; width: 320px; background: var(--base-cream); border: 2px solid var(--border-color); border-radius: var(--radius-sm); padding: 16px; box-shadow: var(--solid-shadow); z-index: 9999; opacity: 0; visibility: hidden; transform: translateY(10px) scale(0.95); transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s; pointer-events: none; }
+  .hotspot-popup.show { opacity: 1; visibility: visible; transform: translateY(0) scale(1); pointer-events: auto; }
+  .hotspot-popup strong { color: var(--accent-coral); display: block; margin-bottom: 6px; font-size: 15px; font-family: var(--font-heading); }
+  .hotspot-popup p { font-size: 13px; line-height: 1.4; margin-bottom: 8px; color: var(--text-graphite); }
+  .hotspot-popup a { color: var(--primary); text-decoration: underline; font-weight: 700; font-size: 13px; display: inline-block; }
+  .hotspot-popup::after { content: ""; position: absolute; width: 12px; height: 12px; background: var(--base-cream); border-right: 2px solid var(--border-color); border-bottom: 2px solid var(--border-color); bottom: -7px; left: 50%; transform: translateX(-50%) rotate(45deg); }
+  .hotspot-popup.pos-bottom::after { top: -7px; bottom: auto; transform: translateX(-50%) rotate(-135deg); }
+
+  .test-result-screen { text-align: center; display: none; flex-direction: column; align-items: center; justify-content: center; height: auto; min-height: 400px; }
+  .test-result-screen.active { display: flex; }
+  .test-result-score { font-family: var(--font-heading); font-size: 64px; font-weight: 900; color: var(--primary); line-height: 1; margin-bottom: 8px; }
+  .test-result-total { font-size: 24px; color: var(--text-graphite); font-weight: 700; margin-bottom: 24px; }
+  .test-result-text { font-size: 20px; font-weight: 600; margin-bottom: 32px; max-width: 500px; }
+
+  .q8-buttons { display: flex; justify-content: flex-end; gap: 10px; margin-top: auto; }
+  .btn-check { background: var(--accent-coral); color: #fff; font-family: var(--font-heading); font-weight: 800; font-size: 18px; padding: 12px 24px; border: 2px solid var(--border-color); border-radius: var(--radius-sm); cursor: pointer; box-shadow: 4px 4px 0 var(--border-color); transition: all 0.15s ease; }
+  .btn-check:hover { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--border-color); }
+
+  /* Сайдбар */
+  .sidebar { position: fixed; top: 60px; left: 0; bottom: 0; width: 260px; background: var(--base-cream); border-right: 2px solid var(--border-color); z-index: 200; transition: transform 0.3s ease; display: flex; flex-direction: column; }
+  .sidebar.collapsed { transform: translateX(-100%); }
+  .sidebar-header { padding: 16px; border-bottom: 2px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; font-weight: 800; color: var(--dark-til); }
+  .sidebar-list { flex: 1; overflow-y: auto; padding: 10px; }
+  .sidebar-item { padding: 8px 12px; margin-bottom: 4px; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600; transition: background 0.2s; color: var(--text-graphite); }
+  .sidebar-item:hover { background: var(--secondary-bg); }
+  .sidebar-item.active { background: var(--primary); color: #fff; }
+  
+  .sidebar-toggle { position: fixed; top: 60px; left: 260px; width: 30px; height: 40px; background: var(--accent-coral); border: 2px solid var(--border-color); border-left: none; border-radius: 0 8px 8px 0; color: #fff; cursor: pointer; z-index: 201; display: flex; align-items: center; justify-content: center; transition: left 0.3s ease; }
+  .sidebar.collapsed + .sidebar-toggle { left: 0; }
+
+  /* =========================================
+     СТИЛИ ДЛЯ ПАЗЛА (10-й слайд)
+     ========================================= */
+  .puzzle-item {
+    padding: 15px; background: var(--base-cream); border: 2px solid var(--border-color);
+    border-radius: var(--radius-sm); cursor: pointer; font-weight: 600;
+    text-align: left; transition: all 0.2s; user-select: none;
+  }
+  .puzzle-item:hover { background: var(--secondary-bg); transform: translateY(-2px); box-shadow: 2px 2px 0 var(--border-color); }
+  .puzzle-item.selected { background: var(--accent-coral); color: #fff; border-color: var(--border-color); }
+  .puzzle-item.matched { background: var(--primary); color: #fff; border-color: var(--border-color); pointer-events: none; opacity: 0.7; }
+  .puzzle-item.wrong { background: var(--accent-coral); color: #fff; border-color: var(--border-color); animation: shake 0.3s; }
+
+  /* =========================================
+     МОБИЛЬНАЯ АДАПТАЦИЯ
+     ========================================= */
+  @media (max-width: 900px) {
+    /* --- ОБЩИЕ ПРАВИЛА --- */
+    html, body { height: auto !important; overflow: auto !important; }
+    body { display: block; }
+    main { overflow: visible; height: auto; }
+    .slide { position: relative; min-height: calc(100vh - 60px); padding: 15px 15px 100px; overflow: visible; }
+    
+    /* Принудительно колонка для всех flex-контейнеров */
+    .slide-content, 
+    .content-split, 
+    .poll-layout,
+    .slide-content[style*="flex-direction: row"] {
+      flex-direction: column !important;
+      align-items: center !important;
+      height: auto !important;
+      gap: 20px !important;
+    }
+
+    .text-side { flex: none; width: 100%; max-width: 100%; align-items: center; text-align: center; }
+    
+    header { padding: 10px 15px; }
+    .header-inner { gap: 8px; }
+    .logo { font-size: 16px; }
+    .header-module { display: none; }
+    .progress-wrap { max-width: 100%; }
+    .progress-label { font-size: 12px; }
+
+    /* --- НАВИГАЦИЯ ВНИЗУ --- */
+    nav.footer { position: fixed; bottom: 0; background: var(--base-cream); padding: 10px 15px; border-top: 2px solid var(--border-color); z-index: 100; }
+    nav.footer.hidden { display: none !important; }
+    .btn { font-size: 16px; padding: 10px 20px; }
+    .btn.large { font-size: 18px; padding: 14px 28px; }
+
+    /* --- СЛАЙД 1 (ОБЛОЖКА) --- */
+    .slide-content.cover { padding-top: 40px; }
+
+    /* --- СЛАЙД 2: ПЛАН КУРСА --- */
+    .plan-grid { grid-template-columns: 1fr; gap: 15px; }
+    .module-card { flex-direction: column; padding: 15px; gap: 8px; }
+    .module-num { font-size: 24px; margin-bottom: 0; }
+    .module-info h3 { font-size: 18px; margin-bottom: 4px; }
+    .module-info p { font-size: 14px; }
+    .lock-icon { top: 15px; right: 15px; width: 20px; height: 20px; }
+
+    /* --- СЛАЙД 3: ХАОС --- */
+    .illustration-side { display: none; }
+
+    /* --- ФИКС ДЛЯ 4 СЛАЙДА (КРУГИ) --- */
+    .circle-container { 
+      width: 95vw !important; 
+      height: 95vw !important; 
+      max-width: 400px !important;
+      max-height: 400px !important;
+      margin: 30px auto !important; 
+      flex-shrink: 0 !important;
+    }
+
+    /* Жестко фиксируем размеры внешних кругов */
+    .step-circle { 
+      position: absolute !important;
+      top: 0 !important;
+      left: 50% !important;
+      width: 88px !important; 
+      height: 88px !important; 
+      margin-left: -44px !important;
+      aspect-ratio: 1 / 1 !important;
+      border-width: 2px !important; 
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: center !important;
+      align-items: center !important;
+      padding: 2px !important;
+      overflow: hidden !important;
+    }
+    
+    .step-num { font-size: 18px !important; margin-bottom: 2px !important; }
+    .step-title { 
+      font-size: 7.5px !important; 
+      line-height: 1.1 !important; 
+      white-space: nowrap !important;
+      max-width: 100% !important;
+      letter-spacing: -0.2px !important;
+    }
+    
+    /* Жестко фиксируем центральный круг */
+    .center-circle { 
+      position: absolute !important;
+      width: 100px !important; 
+      height: 100px !important; 
+      aspect-ratio: 1 / 1 !important;
+      border-width: 2px !important; 
+      font-size: 28px !important; 
+      /* Убеждаемся, что он стоит по центру */
+      top: 50% !important;
+      left: 50% !important;
+      transform: translate(-50%, -50%) !important;
+      margin: 0 !important;
+    }
+    
+    /* Скрываем тултип на мобильном */
+    .tooltip { display: none !important; }
+    
+    /* --- СЛАЙД 5: ФЛИП-КАРТОЧКИ --- */
+    .flip-grid { grid-template-columns: 1fr; gap: 15px; }
+    .flip-card { height: 180px; }
+    .flip-card-front .icon-wrap { width: 60px; height: 60px; margin-bottom: 10px; }
+    .flip-card-front .title { font-size: 18px; }
+    .flip-card-back .desc { font-size: 14px; }
+
+    /* --- СЛАЙД 6: ОПРОС --- */
+    /* Принудительно скрываем правую часть с облаком */
+    .slide-content[style*="flex-direction: row"] > div:last-child {
+      display: none !important;
+    }
+    .cta-block { position: relative !important; top: auto !important; left: auto !important; width: 100% !important; height: auto !important; margin-top: 15px; display: none; }
+    .cta-block.active { display: flex; }
+
+    /* --- СЛАЙД 8: ОБЛОЖКА МОДУЛЯ (скрываем кнопки) --- */
+    .slide[data-module="Модуль 1 · Сортировка"].active#slide-module-cover ~ nav.footer { display: none !important; }
+
+    /* --- СЛАЙД 9: ПОВАР --- */
+    .illustration-side { display: flex; justify-content: center; padding-top: 0; }
+    .chef-animation { max-width: 200px; }
+
+    /* --- СЛАЙД 10: ПАЗЛ (АДАПТИРОВАННЫЙ) --- */
+    .slide-content div[style*="display: flex; gap: 40px"] {
+      flex-direction: column;
+      gap: 15px !important;
+    }
+    .puzzle-item { font-size: 14px; padding: 12px; margin-bottom: 8px; }
+    .puzzle-item.matched { opacity: 0.5; pointer-events: none; }
+    
+    /* Разделяем критерии и примеры */
+    .slide-content div[style*="display: flex; gap: 40px"] > div:first-child {
+      margin-bottom: 20px;
+    }
+
+    /* --- СЛАЙД 12: РАКЕТА --- */
+    .callout#rocketCallout {
+      flex-direction: row !important;
+      padding: 5px 10px !important;
+      text-align: left;
+      gap: 0 !important; /* Убираем отступ между иконкой и текстом */
+      width: 100% !important;
+      height: auto !important;
+      top: 0 !important;
+      left: 0 !important;
+      justify-content: center;
+      margin: 0 !important;
+    }
+    /* Скрываем иконку ракеты */
+    .callout#rocketCallout img {
+      display: none !important;
+    }
+    .callout#rocketCallout span {
+      text-align: left !important;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+    /* Убираем отступы у заголовка "Отметь, что сделаешь" */
+    .slide-content p[style*="font-weight: 600; margin-top: 20px;"] {
+      margin-top: 0 !important;
+      margin-bottom: 10px !important;
+    }
+    .checklist li { font-size: 15px; }
+
+    /* --- СЛАЙД 14: ТЕСТ (9-й вопрос) --- */
+    .test-card { padding: 15px; height: auto; max-height: none; width: 100%; margin: 0; }
+    .test-options { gap: 10px; }
+    .test-option { padding: 12px; font-size: 15px; }
+    .test-btn-next { width: 100%; margin-top: 15px; }
+    .test-find-scene { aspect-ratio: 16/9; width: 100%; height: auto; }
+    #btn9 { position: static; margin-top: 15px; align-self: center; width: 100%; }
+    
+    /* Подсказка повернуть телефон */
+    .rotate-hint { display: flex !important; }
+
+    /* --- СЛАЙД 15: ФИНАЛ --- */
+    .demo-badge { font-size: 14px; padding: 6px 16px; }
+    .cover-title { font-size: 32px; }
+    .cover-subtitle { font-size: 18px; }
+
+    /* --- ИСПРАВЛЕНИЕ ПОПАПА ДЛЯ МОБИЛЬНЫХ --- */
+    .hotspot-popup {
+      position: fixed !important;
+      top: 50% !important;
+      left: 50% !important;
+      transform: translate(-50%, -50%) scale(1) !important;
+      width: 90% !important;
+      max-width: 320px;
+      z-index: 9999;
+      box-shadow: 0 0 0 100vmax rgba(0,0,0,0.5);
+    }
+    .hotspot-popup::after { display: none; }
+    .hotspot-popup .close-popup-btn { display: block !important; }
+  }
+
+  /* --- СТИЛИ ДЛЯ МОБИЛЬНОГО МОДАЛЬНОГО ОКНА --- */
+  .mobile-modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 2000;
+    display: none; align-items: center; justify-content: center; padding: 20px;
+  }
+  .mobile-modal-overlay.active { display: flex; }
+  .mobile-modal {
+    background: var(--base-cream); border: 3px solid var(--border-color);
+    border-radius: var(--radius); padding: 20px; width: 100%; max-width: 350px;
+    box-shadow: var(--solid-shadow); position: relative; text-align: left;
+    animation: popIn 0.3s ease;
+  }
+  .mobile-modal .close-btn {
+    position: absolute; top: 10px; right: 10px; background: none; border: none;
+    font-size: 24px; cursor: pointer; color: var(--text-graphite); font-weight: 800;
+    line-height: 1;
+  }
+  .mobile-modal h4 { font-family: var(--font-heading); font-size: 18px; color: var(--dark-til); margin-bottom: 10px; padding-right: 25px; }
+  .mobile-modal p { font-size: 15px; line-height: 1.4; margin-bottom: 0; }
+
+  /* --- СТИЛИ ДЛЯ ПОДСКАЗКИ ПОВОРОТА --- */
+  .rotate-hint {
+    display: none;
+  }
+
+  /* Кнопка закрытия попапа (скрыта на десктопе) */
+  .close-popup-btn {
+    display: none;
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: var(--text-graphite);
+    font-weight: 800;
+    line-height: 1;
+    z-index: 10000;
+  }
+
+  /* =========================================
+     ФИКС ДЛЯ 10-ГО ЭКРАНА (ПАЗЛ)
+     ========================================= */
+  .mobile-heading { display: none; }
+  .desktop-desc { display: block; }
+
+  /* Убираем лишние отступы на десктопе */
+  .slide-content h2 { margin-bottom: 10px; }
+  .slide-content p.desktop-desc { margin-bottom: 20px; font-size: 16px; }
+  #puzzleMessage { margin-top: 10px !important; }
+
+  @media (max-width: 900px) {
+    /* 1. Скрываем десктопное описание */
+    .desktop-desc { 
+      display: none !important; 
+    }
+    
+    /* 2. Показываем мобильные заголовки */
+    .mobile-heading { 
+      display: block !important; 
+      font-family: var(--font-heading);
+      font-weight: 800;
+      font-size: 15px;
+      color: var(--dark-til);
+      margin-bottom: 8px;
+      margin-top: 5px;
+      text-align: center;
+    }
+
+    /* 3. Принудительно возвращаем 2 колонки для пазла, 
+          отменяя глобальное flex-direction: column */
+    .slide-content div[style*="display: flex; gap: 20px"] {
+      flex-direction: row !important;
+      align-items: stretch !important;
+      gap: 10px !important; /* Уменьшаем отступ между колонками */
+    }
+
+    /* 4. Убираем лишние отступы, из-за которых контент съезжает */
+    .slide-content > div > div {
+      width: auto !important; /* Отменяем width: 100% из глобальных стилей */
+      margin-bottom: 0 !important;
+    }
+
+    /* 5. Делаем текст в плашках чуть меньше, чтобы влезал в экран */
+    .puzzle-item { 
+      font-size: 13px !important; 
+      padding: 10px !important; 
+      line-height: 1.3 !important; 
+    }
+
+    /* ФИКС: Скрываем десктопные подсказки "Наведите курсор", показываем мобильные "Нажмите" */
+    .desktop-hint { display: none !important; }
+    .mobile-hint { display: block !important; }
+  }
+  
+  /* По умолчанию (десктоп) */
+  .desktop-hint { display: block; }
+  .mobile-hint { display: none; }
+</style>
+</head>
+<body>
+
+<!-- Сайдбар -->
+<div class="sidebar collapsed" id="sidebar">
+  <div class="sidebar-header">
+    <span>Навигация</span>
+    <button class="btn ghost" onclick="toggleSidebar()" style="padding: 4px 8px; font-size: 14px;">✕</button>
+  </div>
+  <div class="sidebar-list" id="sidebarList"></div>
+</div>
+<button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">5С для кухни</div>
+    <div class="header-module" id="headerModule">Модуль 0 · Введение</div>
+    <div class="progress-wrap">
+      <div class="progress-label"><span id="slideNum">1</span> / <span id="slideTotal">15</span></div>
+      <div class="progress-bar-bg"><div class="progress-fill" id="progressFill"></div></div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- Слайд 1: Обложка -->
+  <section class="slide active" data-module="Главная обложка">
+    <div class="slide-content cover">
+      <div style="background: var(--secondary-bg); padding: 12px 24px; border-radius: 99px; border: 2px solid var(--primary); font-weight: 800; color: var(--dark-til); margin-bottom: 24px; font-size: 18px;">Обучающий курс</div>
+      <h1 class="cover-title"><span class="text-fill-coral">5С для кухни</span></h1>
+      <p class="cover-subtitle">Система, которая возвращает порядок, скорость и спокойствие на рабочем месте повара.</p>
+      <button class="btn large" onclick="nextSlide()">Начать обучение →</button>
+    </div>
+  </section>
+
+  <!-- Слайд 2: План курса -->
+  <section class="slide" data-module="План курса">
+    <div class="slide-content">
+      <h2 style="text-align: center;"><span class="text-fill-coral">План курса</span></h2>
+      
+      <div class="plan-grid">
+        <!-- Модуль 0 -->
+        <div class="module-card">
+          <div class="module-num">00</div>
+          <div class="module-info">
+            <h3>Введение в 5С</h3>
+            <p>Что такое система 5С, зачем она нужна на кухне и как она влияет на скорость, безопасность и стресс.</p>
+          </div>
+        </div>
+
+        <!-- Модуль 1 -->
+        <div class="module-card">
+          <div class="module-num">01</div>
+          <div class="module-info">
+            <h3>Сортировка</h3>
+            <p>Учимся оставлять только нужное. Разбираем красные бирки и избавляемся от лишнего.</p>
+          </div>
+        </div>
+
+        <!-- Модуль 2 (Закрыт) -->
+        <div class="module-card locked">
+          <svg class="lock-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6zm9 14H6V10h12v10zm-6-3c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"/>
+          </svg>
+          <div class="module-num">02</div>
+          <div class="module-info">
+            <h3>Расположение</h3>
+            <p>Каждая вещь на своём месте. Правило 30 секунд и организация рабочего пространства.</p>
+          </div>
+        </div>
+
+        <!-- Модуль 3 (Закрыт) -->
+        <div class="module-card locked">
+          <svg class="lock-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6zm9 14H6V10h12v10zm-6-3c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"/>
+          </svg>
+          <div class="module-num">03</div>
+          <div class="module-info">
+            <h3>Уборка</h3>
+            <p>Чисто не там, где убирают. Как поддерживать порядок «по ходу» смены и не тратить на это силы.</p>
+          </div>
+        </div>
+
+        <!-- Модуль 4 (Закрыт) -->
+        <div class="module-card locked">
+          <svg class="lock-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6zm9 14H6V10h12v10zm-6-3c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"/>
+          </svg>
+          <div class="module-num">04</div>
+          <div class="module-info">
+            <h3>Стандартизация</h3>
+            <p>Фото-стандарты, маркировка и чек-листы. Как сделать порядок привычкой для всей команды.</p>
+          </div>
+        </div>
+
+        <!-- Модуль 5 (Закрыт) -->
+        <div class="module-card locked">
+          <svg class="lock-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6zm9 14H6V10h12v10zm-6-3c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"/>
+          </svg>
+          <div class="module-num">05</div>
+          <div class="module-info">
+            <h3>Совершенствование</h3>
+            <p>Регулярный аудит и доска идей. Как улучшать рабочие места каждый день.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Слайд 3: Знакомая картина? -->
+  <section class="slide" data-module="Модуль 0 · Введение">
+    <div class="slide-content">
+      <h1><span class="text-fill-coral">Знакомая картина?</span></h1>
+      <div class="content-split">
+        <div class="text-side">
+          <p>Час пик. Заказы идут один за другим. Вы ищете чистую доску — <span class="highlight-text">её нет на месте</span>. Нож, который нужен, куда-то пропал. На плите что-то подгорает, а под рукой нет тряпки. Гости ждут. Вы нервничаете.</p>
+          <div class="callout">Проблема не в том, что вы плохо работаете. Проблема в том, что <span class="highlight-text">на кухне нет системы</span>. 5С — это система, которая возвращает порядок и скорость.</div>
+        </div>
+        <div class="illustration-side">
+          <div class="image-wrapper">
+            <img src="kitchen-chaos.jpg" alt="Хаос на кухне" class="chaos-img">
+            <div class="toast">
+              <div class="toast-text"><strong>Это художественное преувеличение:</strong> мы добавили немного драмы. В жизни хаос бывает тише, но последствия — те же.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Слайд 4: Что такое 5С -->
+  <section class="slide" data-module="Модуль 0 · Введение">
+    <div class="slide-content">
+      <h2><span class="text-fill-coral">Что такое 5С</span></h2>
+      
+      <!-- Десктопная подсказка -->
+      <p class="desktop-hint" style="text-align:center; margin-bottom: 0; font-weight: 600;">5С — это пять шагов для <span class="highlight-text">удобного и безопасного</span> рабочего места. <br><span style="font-size:15px; opacity: 0.7;">Наведите курсор на шаг, чтобы узнать подробности.</span></p>
+      
+      <!-- Мобильная подсказка -->
+      <p class="mobile-hint" style="text-align:center; margin-bottom: 0; font-weight: 600;">5С — это пять шагов для <span class="highlight-text">удобного и безопасного</span> рабочего места. <br><span style="font-size:15px; opacity: 0.7;">Нажмите на шаг, чтобы узнать подробности.</span></p>
+      
+      <div class="circle-container">
+        <div class="center-circle">5S</div>
+        
+        <div class="step-wrapper step-1"><div class="step-circle" data-id="1" data-title="1. Сортировка" data-color="var(--dark-til)" data-desc="Оставь на столе только то, что нужно для заказа прямо сейчас. Сломанный инвентарь, просрочка и лишние предметы — убираем."><div class="step-num">1</div><div class="step-title">Сортировка</div></div></div>
+        
+        <div class="step-wrapper step-2"><div class="step-circle" data-id="2" data-title="2. Расположение" data-color="var(--primary)" data-desc="Нож, доска и специи — под рукой. Каждый предмет знает своё место. Правило 30 секунд: нужное находится мгновенно."><div class="step-num">2</div><div class="step-title">Расположение</div></div></div>
+        
+        <div class="step-wrapper step-3"><div class="step-circle" data-id="3" data-title="3. Уборка" data-color="var(--accent-coral)" data-desc="Чисто не там, где убирают, а там, где не мусорят. Уборка «по ходу» смены сохраняет силы и предотвращает нагар."><div class="step-num">3</div><div class="step-title">Уборка</div></div></div>
+        
+        <div class="step-wrapper step-4"><div class="step-circle" data-id="4" data-title="4. Стандартизация" data-color="var(--primary)" data-desc="Сделай так, чтобы порядок можно было повторить. Фото-стандарты, маркировка, чек-листы открытия и закрытия смены."><div class="step-num">4</div><div class="step-title">Стандартизация</div></div></div>
+        
+        <div class="step-wrapper step-5"><div class="step-circle" data-id="5" data-title="5. Совершенствование" data-color="var(--dark-til)" data-desc="Порядок — это не разовая акция. Регулярный аудит, привычка и доска идей помогают улучшать рабочие места каждый день."><div class="step-num">5</div><div class="step-title">Совершенствование</div></div></div>
+        
+        <div class="arrow-wrapper arrow-1"><div class="arrow"></div></div>
+        <div class="arrow-wrapper arrow-2"><div class="arrow"></div></div>
+        <div class="arrow-wrapper arrow-3"><div class="arrow"></div></div>
+        <div class="arrow-wrapper arrow-4"><div class="arrow"></div></div>
+        <div class="arrow-wrapper arrow-5"><div class="arrow"></div></div>
+
+        <div class="tooltip" id="tooltip">
+          <h4><span class="color-dot" id="ttDot"></span> <span id="ttTitle"></span></h4>
+          <p id="ttDesc"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Слайд 5: Зачем это нужно на кухне -->
+  <section class="slide" data-module="Модуль 0 · Введение">
+    <div class="slide-content">
+      <h2><span class="text-fill-coral">Зачем это нужно на кухне</span></h2>
+      
+      <!-- Десктопная подсказка -->
+      <p class="desktop-hint" style="text-align:center; margin-bottom: 10px; font-weight: 600;">Это система, которая влияет на вашу <span class="highlight-text">ежедневную работу</span>. <br><span style="font-size:15px; opacity: 0.7;">Наведите курсор на карточку, чтобы узнать подробности.</span></p>
+      
+      <!-- Мобильная подсказка -->
+      <p class="mobile-hint" style="text-align:center; margin-bottom: 10px; font-weight: 600;">Это система, которая влияет на вашу <span class="highlight-text">ежедневную работу</span>. <br><span style="font-size:15px; opacity: 0.7;">Нажмите на карточку, чтобы узнать подробности.</span></p>
+      
+      <div class="flip-grid">
+        <div class="flip-card">
+          <div class="flip-card-inner">
+            <div class="flip-card-front">
+              <div class="icon-wrap"><img src="icon-speed.png" alt="Скорость"></div>
+              <div class="title">Скорость</div>
+            </div>
+            <div class="flip-card-back">
+              <div class="desc">Меньше времени на поиск ножа, доски, специй; больше — на готовку.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flip-card">
+          <div class="flip-card-inner">
+            <div class="flip-card-front">
+              <div class="icon-wrap"><img src="icon-safety.png" alt="Безопасность"></div>
+              <div class="title">Безопасность</div>
+            </div>
+            <div class="flip-card-back">
+              <div class="desc">Меньше рисков: острые ножи не там, где нужно; подтёки на полу; нагар на плите.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flip-card">
+          <div class="flip-card-inner">
+            <div class="flip-card-front">
+              <div class="icon-wrap"><img src="icon-calm.png" alt="Спокойствие"></div>
+              <div class="title">Спокойствие</div>
+            </div>
+            <div class="flip-card-back">
+              <div class="desc">Меньше стресса в час пик и в конце смены. Работа приносит удовольствие.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flip-card">
+          <div class="flip-card-inner">
+            <div class="flip-card-front">
+              <div class="icon-wrap"><img src="icon-money.png" alt="Деньги"></div>
+              <div class="title">Деньги</div>
+            </div>
+            <div class="flip-card-back">
+              <div class="desc">Меньше потерь продуктов, инвентаря и переделок. Больше прибыли.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="callout" style="text-align:center;">5С не требует дополнительного времени. Оно высвобождает время, которое вы тратите на поиск, переделки и стресс.</div>
+    </div>
+  </section>
+
+  <!-- Слайд 6: Мини-опрос -->
+  <section class="slide" data-module="Модуль 0 · Введение">
+    <div class="slide-content" style="display: flex; flex-direction: row; align-items: center; gap: 60px; height: 100%;">
+      
+      <div style="flex: 1; max-width: 500px; position: relative; display: flex; flex-direction: column; height: 100%; justify-content: center;">
+        <h2><span class="text-fill-coral">Мини-опрос</span></h2>
+        <p style="font-weight: 600; margin-bottom: 16px;">Что чаще всего мешает или теряется на вашем рабочем месте на кухне?</p>
+        
+        <div class="test-options" id="pollOptions">
+          <label class="test-option"><input type="checkbox" onchange="updatePollPopup(this, 'Ножи и доски — <span class=\'highlight\'>самая частая проблема</span>. Почему? Потому что они нужны каждую минуту, а если их не помыть сразу — они <span class=\'highlight\'>теряются</span>. 5С решает это: каждый нож знает своё место.', 'Вы не одиноки! Ножи и доски — это <span class=\'highlight\'>главная проблема</span> всех кухонь. В этом курсе мы научим вас организовывать их так, чтобы они всегда были под рукой.')"><span class="radio-mark"></span> Ножи и разделочные доски</label>
+          
+          <label class="test-option"><input type="checkbox" onchange="updatePollPopup(this, 'Специи и приправы. Когда их много и они разбросаны, вы тратите <span class=\'highlight\'>драгоценные секунды</span> на поиск нужной баночки. Решение: <span class=\'highlight\'>единая полка</span> и подписанные крышки.', 'Специи — это ваша палитра. Узнайте, как выстроить их так, чтобы готовить было в удовольствие, а не в поисках.')"><span class="radio-mark"></span> Специи и приправы</label>
+          
+          <label class="test-option"><input type="checkbox" onchange="updatePollPopup(this, 'Чистая посуда. Если её не хватает, приходится <span class=\'highlight\'>мыть в спешке</span>. Решение: мыть по ходу смены и держать <span class=\'highlight\'>запас</span> в специальной зоне.', 'Посуда не должна отвлекать. Мы покажем, как наладить систему мытья и хранения, чтобы вы не тратили на это лишние нервы.')"><span class="radio-mark"></span> Чистая посуда / контейнеры</label>
+          
+          <label class="test-option"><input type="checkbox" onchange="updatePollPopup(this, 'Полотенца и тряпки. Мокрая тряпка на столе — <span class=\'highlight\'>рассадник бактерий</span>. Решение: отдельные крючки для чистых и грязных полотенец.', 'Гигиена — это база. Узнайте, как правильно организовать зону с полотенцами, чтобы безопасность стала привычкой.')"><span class="radio-mark"></span> Полотенца / тряпки</label>
+          
+          <label class="test-option"><input type="checkbox" onchange="updatePollPopup(this, 'Инвентарь (лопатки, венчики). Когда их много и они лежат кучей, нужный предмет <span class=\'highlight\'>найти сложно</span>. Решение: подставка или <span class=\'highlight\'>магнитная лента</span>.', 'Инвентарь должен работать, а не прятаться. В курсе мы разберем, как разложить его так, чтобы всё было под рукой.')"><span class="radio-mark"></span> Инвентарь (лопатки, венчики)</label>
+          
+          <label class="test-option"><input type="checkbox" onchange="updatePollPopup(this, 'Продукты и заготовки. Без маркировки и порядка они <span class=\'highlight\'>портятся</span>. Решение: маркировка и <span class=\'highlight\'>зонирование по срокам</span>.', 'Продукты — это деньги. Научитесь хранить их так, чтобы они не пропадали, а всегда были готовы к использованию.')"><span class="radio-mark"></span> Продукты / заготовки</label>
+          
+          <label class="test-option"><input type="checkbox" onchange="updatePollPopup(this, 'Другое. Расскажите шефу, что ещё мешает вам на кухне — это <span class=\'highlight\'>первый шаг к улучшению</span>.', 'Любая проблема решаема. В этом курсе вы найдете инструменты, которые помогут навести порядок в любой ситуации.')"><span class="radio-mark"></span> Другое</label>
+        </div>
+
+        <!-- Блок мотивации (ОС) -->
+        <div id="ctaBlock" class="cta-block" style="top: 600px; left: 89px; width: 760px; height: 68px;">
+          <div class="cta-text" id="ctaText"></div>
+        </div>
+
+      </div>
+
+      <!-- Правая часть: CSS Облако с ОС (СКРЫТО НА МОБИЛЬНЫХ) -->
+      <div style="flex: 1; display: flex; justify-content: center; align-items: center; height: 100%; padding-left: 40px;" class="poll-right">
+        
+        <div class="thought-cloud">
+          <div class="bubble-3"></div>
+          
+          <div id="pollInfoBox" class="poll-info-box">
+            
+            <!-- Загрузка (видна до выбора) -->
+            <div class="loading-dots" id="loadingDots">
+              <span></span><span></span><span></span><span></span><span></span>
+            </div>
+
+            <!-- Активный контент (появляется после выбора) -->
+            <div class="active-content" id="activeContent">
+              <img src="icon-bulb.png" alt="Идея" class="icon-bulb-img">
+              <p id="pollInfoText"></p>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Слайд 7: Итог модуля 0 -->
+  <section class="slide" data-module="Модуль 0 · Введение">
+    <div class="slide-content">
+      <h2><span class="text-fill-coral">Итог модуля</span></h2>
+      <ul>
+        <li>5С — это пять шагов: сортировка, расположение, уборка, стандартизация, совершенствование.</li>
+        <li>5С — не про уборку, а про <span class="highlight-text">систему работы на кухне</span>.</li>
+        <li>Результат: скорость, безопасность, меньше стресса и потерь.</li>
+      </ul>
+      <div class="callout">Дальше — первый шаг: Сортировка. Убираем всё лишнее с рабочего места повара.</div>
+    </div>
+  </section>
+
+  <!-- Слайд 8: Обложка модуля 1 -->
+  <section class="slide" data-module="Модуль 1 · Сортировка" id="slide-module-cover">
+    <div class="slide-content cover">
+      <div class="module-cover-number">01</div>
+      <h1 class="cover-title"><span class="text-fill-coral">Сортировка</span></h1>
+      <p class="cover-subtitle">Первый шаг к порядку. Учимся оставлять только нужное и избавляться от лишнего.</p>
+      <button class="btn large" onclick="nextSlide()">Продолжить →</button>
+    </div>
+  </section>
+
+  <!-- Слайд 9: Зачем сортировать? -->
+  <section class="slide" data-module="Модуль 1 · Сортировка">
+    <div class="slide-content">
+      <div class="content-split">
+        <div class="text-side">
+          <h1><span class="text-fill-coral">Зачем сортировать?</span></h1>
+          <p>Сортировка — это первый шаг. Задача простая: оставить на рабочем месте только то, что нужно для работы. Всё остальное — убрать, переместить или выбросить.</p>
+          <p>Когда на столе лишнее — оно мешает. Вы тратите время на поиск нужного, путаетесь, чаще ошибаетесь. На кухне это особенно заметно <span class="highlight-text">в час пик</span>.</p>
+        </div>
+        <div class="illustration-side">
+          <!-- Картинка повара с анимацией -->
+          <img src="chef-thought.png" alt="Повар в облаке мысли" class="chef-animation" style="width: 100%; max-width: 450px; height: auto; display: block;">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Слайд 10: Что считается «лишним» (ПАЗЛ) -->
+  <section class="slide" data-module="Модуль 1 · Сортировка">
+    <div class="slide-content" style="padding-top: 10px;">
+      <h2 style="margin-bottom: 8px;"><span class="text-fill-coral">Что считается «лишним»</span></h2>
+      
+      <!-- Десктопное описание (скрыто на мобильных) -->
+      <p class="desktop-desc" style="font-weight: 600; margin-bottom: 15px;">Слева — критерии «лишнего». Справа — примеры. Соедините критерий с подходящим примером, кликая сначала на критерий, затем на пример.</p>
+      
+      <!-- Мобильное описание (скрыто на десктопе) -->
+      <p class="mobile-heading" style="display:none; font-size: 15px; font-weight: 500; color: var(--text-graphite); margin-bottom: 15px;">
+        Нажмите на критерий, затем на пример.
+      </p>
+
+      <div style="display: flex; gap: 20px; margin-top: 10px; flex-wrap: wrap;">
+        
+        <!-- Левая колонка: Критерии -->
+        <div style="flex: 1; min-width: 250px; display: flex; flex-direction: column; gap: 8px;">
+          <div class="mobile-heading" style="display:none;">Критерии лишнего</div>
+          <div class="puzzle-item criterion" data-id="1" onclick="selectCriterion(this)">Сломанный / нерабочий</div>
+          <div class="puzzle-item criterion" data-id="2" onclick="selectCriterion(this)">Просрочено / испорчено</div>
+          <div class="puzzle-item criterion" data-id="3" onclick="selectCriterion(this)">Лишнее количество</div>
+          <div class="puzzle-item criterion" data-id="4" onclick="selectCriterion(this)">Личные вещи</div>
+        </div>
+        
+        <!-- Правая колонка: Примеры -->
+        <div style="flex: 1; min-width: 250px; display: flex; flex-direction: column; gap: 8px;">
+          <div class="mobile-heading" style="display:none;">Примеры</div>
+          <div class="puzzle-item example" data-id="4" onclick="selectExample(this)">Телефон, сумка, куртка на столе</div>
+          <div class="puzzle-item example" data-id="1" onclick="selectExample(this)">Сломанный нож, треснувшая доска</div>
+          <div class="puzzle-item example" data-id="3" onclick="selectExample(this)">5 открывалок, 10 полотенец</div>
+          <div class="puzzle-item example" data-id="2" onclick="selectExample(this)">Продукты с истёкшим сроком</div>
+        </div>
+      </div>
+
+      <!-- Блок ОС (обратной связи) -->
+      <div id="puzzleMessage" style="margin-top: 20px; text-align: center; display: none;">
+        <div class="callout" style="display: inline-block; font-size: 18px; padding: 12px 24px; margin: 0 auto; animation: popIn 0.4s ease;">
+          🎉 <strong>Отлично!</strong> Вы соединили все пары. Теперь вы знаете, что считается лишним.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Слайд 11: Красная бирка -->
+  <section class="slide" id="slide-red-tag" data-module="Модуль 1 · Сортировка">
+    <div class="slide-content">
+      <h2><span class="text-fill-coral">Красная бирка</span></h2>
+      
+      <!-- Новый текст объяснения -->
+      <p style="margin-bottom: 24px; font-weight: 500; font-size: 18px; line-height: 1.5;">
+        <strong>Красная бирка — это инструмент визуального контроля.</strong> 
+        Вы помечаете предмет, который вызывает сомнения (сломан, не используется, лежит не на месте), и даете ему «испытательный срок». Это помогает не выбрасывать нужное по ошибке и не хранить годами хлам.
+      </p>
+
+      <ol>
+        <li><strong>Пометить</strong> — наклеить красную бирку на предмет.</li>
+        <li><strong>Записать</strong> — что это, откуда, почему лишний.</li>
+        <li><strong>Переместить</strong> — в специальную зону «карантина».</li>
+        <li><strong>Решить</strong> — в течение 1–3 дней: вернуть, передать, выбросить.</li>
+      </ol>
+      <div class="callout">Красная бирка не означает «выбросить». Она означает «разобраться».</div>
+      
+      <!-- Картинка под текстом (немного уменьшили высоту, чтобы влезло) -->
+      <div style="margin-top: 10px; width: 100%; display: flex; justify-content: center;">
+        <img src="red-tag-steps.png" alt="Жизненный цикл красной бирки" style="width: 100%; max-height: 220px; object-fit: contain; display: block;">
+      </div>
+    </div>
+  </section>
+
+  <!-- Слайд 12: Чек-лист на сегодня -->
+  <section class="slide" id="slide-checklist" data-module="Модуль 1 · Сортировка">
+    <div class="slide-content">
+      <h2><span class="text-fill-coral">Чек-лист на сегодня</span></h2>
+      
+      <!-- Блок с ракетой (УБРАНЫ ЖЕСТКИЕ КООРДИНАТЫ) -->
+      <div class="callout" id="rocketCallout" style="display: flex; align-items: center; justify-content: flex-start; gap: 15px; margin-top: 20px;">
+        <img src="icon-rocket.png" alt="Ракета" style="width: 100px; height: 100px; object-fit: contain; flex-shrink: 0;">
+        <span style="flex: 1; text-align: left; line-height: 1.3;">
+          <strong>Не откладывайте на завтра!</strong> Выберите, что вы можете сделать уже сегодня (отметьте минимум один пункт, чтобы продолжить).
+        </span>
+      </div>
+
+      <p style="font-weight: 600; margin-top: 20px;">Отметь, что сделаешь уже сегодня:</p>
+      
+      <ul class="checklist" id="checklist-items">
+        <li onclick="toggleChecklistItem(this)">
+          <input type="checkbox" onchange="checkChecklist()"> Сломанный инвентарь — утилизировать
+        </li>
+        <li onclick="toggleChecklistItem(this)">
+          <input type="checkbox" onchange="checkChecklist()"> Просроченные продукты — утилизировать
+        </li>
+        <li onclick="toggleChecklistItem(this)">
+          <input type="checkbox" onchange="checkChecklist()"> Продукты без маркировки — промаркировать
+        </li>
+        <li onclick="toggleChecklistItem(this)">
+          <input type="checkbox" onchange="checkChecklist()"> Лишнее количество предметов — оставить нужное
+        </li>
+        <li onclick="toggleChecklistItem(this)">
+          <input type="checkbox" onchange="checkChecklist()"> Личные вещи — убрать
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Слайд 13: Итог модуля 1 -->
+  <section class="slide" data-module="Модуль 1 · Сортировка">
+    <div class="slide-content">
+      <h2><span class="text-fill-coral">Итог модуля</span></h2>
+      <ul>
+        <li>Сортировка — оставить только то, что нужно для работы.</li>
+        <li>Лишнее — всё, что не используется прямо сейчас.</li>
+        <li>Красная бирка — способ разобраться, а не выбросить.</li>
+      </ul>
+      <div class="callout" style="text-align: center;">Вы прошли Модули 0 и 1. Пора проверить знания!</div>
+    </div>
+  </section>
+
+  <!-- Слайд 14: ТЕСТ -->
+  <section class="slide" id="slide-test" data-module="Тест">
+    <div class="slide-content" style="align-items: center; justify-content: center; height: 100%;">
+      
+      <div id="testWrapper" style="width: 100%; max-width: 1000px; height: 100%; display: flex; align-items: center;">
+        
+        <!-- Вопрос 1 -->
+        <div class="test-card active" id="q1">
+          <div class="test-decor-diamond"></div>
+          <h2>1. Что такое 5С?</h2>
+          <div class="test-options">
+            <label class="test-option"><input type="radio" name="q1" value="0" onchange="checkAnswer(1)"><span class="radio-mark"></span> Система мотивации сотрудников кухни</label>
+            <label class="test-option"><input type="radio" name="q1" value="0" onchange="checkAnswer(1)"><span class="radio-mark"></span> Пять этапов приготовления соусов</label>
+            <label class="test-option"><input type="radio" name="q1" value="1" onchange="checkAnswer(1)"><span class="radio-mark"></span> Система организации рабочего места для порядка и скорости</label>
+            <label class="test-option"><input type="radio" name="q1" value="0" onchange="checkAnswer(1)"><span class="radio-mark"></span> Система контроля качества блюд</label>
+          </div>
+          <div class="test-explanation" id="exp1"></div>
+          <button class="test-btn-next" id="btn1" onclick="goToNextQuestion(1)" style="display:none;">Дальше →</button>
+        </div>
+
+        <!-- Вопрос 2 -->
+        <div class="test-card" id="q2">
+          <div class="test-decor-diamond"></div>
+          <h2>2. Почему без системы 5С на кухне заказы готовятся медленнее?</h2>
+          <div class="test-options">
+            <label class="test-option"><input type="radio" name="q2" value="0" onchange="checkAnswer(2)"><span class="radio-mark"></span> Повара меньше общаются</label>
+            <label class="test-option"><input type="radio" name="q2" value="1" onchange="checkAnswer(2)"><span class="radio-mark"></span> Сотрудники тратят время на поиск нужных предметов</label>
+            <label class="test-option"><input type="radio" name="q2" value="0" onchange="checkAnswer(2)"><span class="radio-mark"></span> Плита готовит медленнее</label>
+            <label class="test-option"><input type="radio" name="q2" value="0" onchange="checkAnswer(2)"><span class="radio-mark"></span> Гости заказывают сложные блюда</label>
+          </div>
+          <div class="test-explanation" id="exp2"></div>
+          <button class="test-btn-next" id="btn2" onclick="goToNextQuestion(2)" style="display:none;">Дальше →</button>
+        </div>
+
+        <!-- Вопрос 3 -->
+        <div class="test-card" id="q3">
+          <div class="test-decor-diamond"></div>
+          <h2>3. Верно или неверно: Красная бирка означает, что предмет нужно немедленно выбросить.</h2>
+          <div class="test-options">
+            <label class="test-option"><input type="radio" name="q3" value="0" onchange="checkAnswer(3)"><span class="radio-mark"></span> Верно</label>
+            <label class="test-option"><input type="radio" name="q3" value="1" onchange="checkAnswer(3)"><span class="radio-mark"></span> Неверно</label>
+          </div>
+          <div class="test-explanation" id="exp3"></div>
+          <button class="test-btn-next" id="btn3" onclick="goToNextQuestion(3)" style="display:none;">Дальше →</button>
+        </div>
+
+        <!-- Вопрос 4 -->
+        <div class="test-card" id="q4">
+          <div class="test-decor-diamond"></div>
+          <h2>4. Что нужно сделать с предметом, который вы пометили красной биркой?</h2>
+          <div class="test-options">
+            <label class="test-option"><input type="radio" name="q4" value="0" onchange="checkAnswer(4)"><span class="radio-mark"></span> Сразу выбросить</label>
+            <label class="test-option"><input type="radio" name="q4" value="1" onchange="checkAnswer(4)"><span class="radio-mark"></span> Переместить в зону «карантина» и решить судьбу в течение 1–3 дней</label>
+            <label class="test-option"><input type="radio" name="q4" value="0" onchange="checkAnswer(4)"><span class="radio-mark"></span> Отдать шефу</label>
+            <label class="test-option"><input type="radio" name="q4" value="0" onchange="checkAnswer(4)"><span class="radio-mark"></span> Оставить на месте</label>
+          </div>
+          <div class="test-explanation" id="exp4"></div>
+          <button class="test-btn-next" id="btn4" onclick="goToNextQuestion(4)" style="display:none;">Дальше →</button>
+        </div>
+
+        <!-- Вопрос 5 -->
+        <div class="test-card" id="q5">
+          <div class="test-decor-diamond"></div>
+          <h2>5. Какое «С» в системе 5С идет первым?</h2>
+          <div class="test-options">
+            <label class="test-option"><input type="radio" name="q5" value="0" onchange="checkAnswer(5)"><span class="radio-mark"></span> Стандартизация</label>
+            <label class="test-option"><input type="radio" name="q5" value="1" onchange="checkAnswer(5)"><span class="radio-mark"></span> Сортировка</label>
+            <label class="test-option"><input type="radio" name="q5" value="0" onchange="checkAnswer(5)"><span class="radio-mark"></span> Сияние</label>
+            <label class="test-option"><input type="radio" name="q5" value="0" onchange="checkAnswer(5)"><span class="radio-mark"></span> Совершенствование</label>
+          </div>
+          <div class="test-explanation" id="exp5"></div>
+          <button class="test-btn-next" id="btn5" onclick="goToNextQuestion(5)" style="display:none;">Дальше →</button>
+        </div>
+
+        <!-- Вопрос 6 -->
+        <div class="test-card" id="q6">
+          <div class="test-decor-diamond"></div>
+          <h2>6. Что такое сортировка в системе 5С?</h2>
+          <div class="test-options">
+            <label class="test-option"><input type="radio" name="q6" value="0" onchange="checkAnswer(6)"><span class="radio-mark"></span> Когда все инструменты разложены по цветам</label>
+            <label class="test-option"><input type="radio" name="q6" value="1" onchange="checkAnswer(6)"><span class="radio-mark"></span> Когда на рабочем месте остаётся только то, что нужно для текущей работы</label>
+            <label class="test-option"><input type="radio" name="q6" value="0" onchange="checkAnswer(6)"><span class="radio-mark"></span> Когда повар моет все инструменты после каждого использования</label>
+            <label class="test-option"><input type="radio" name="q6" value="0" onchange="checkAnswer(6)"><span class="radio-mark"></span> Когда все предметы подписаны</label>
+          </div>
+          <div class="test-explanation" id="exp6"></div>
+          <button class="test-btn-next" id="btn6" onclick="goToNextQuestion(6)" style="display:none;">Дальше →</button>
+        </div>
+
+        <!-- Вопрос 7 -->
+        <div class="test-card" id="q7">
+          <div class="test-decor-diamond"></div>
+          <h2>7. Верно или неверно: На рабочем столе повара можно хранить запасной инвентарь (3-4 половника).</h2>
+          <div class="test-options">
+            <label class="test-option"><input type="radio" name="q7" value="0" onchange="checkAnswer(7)"><span class="radio-mark"></span> Верно</label>
+            <label class="test-option"><input type="radio" name="q7" value="1" onchange="checkAnswer(7)"><span class="radio-mark"></span> Неверно</label>
+          </div>
+          <div class="test-explanation" id="exp7"></div>
+          <button class="test-btn-next" id="btn7" onclick="goToNextQuestion(7)" style="display:none;">Дальше →</button>
+        </div>
+
+        <!-- Вопрос 8 (Множественный выбор) -->
+        <div class="test-card" id="q8">
+          <div class="test-decor-diamond"></div>
+          <h2>8. Что из этого — «лишнее» на рабочем месте повара? (Выберите все правильные ответы)</h2>
+          <div class="test-options">
+            <label class="test-option checkbox-option"><input type="checkbox" name="q8" value="0"><span class="radio-mark"></span> Свежие овощи для текущего заказа</label>
+            <label class="test-option checkbox-option"><input type="checkbox" name="q8" value="1"><span class="radio-mark"></span> Просроченный соус</label>
+            <label class="test-option checkbox-option"><input type="checkbox" name="q8" value="1"><span class="radio-mark"></span> Запасной чистый нож (3-4 штуки)</label>
+            <label class="test-option checkbox-option"><input type="checkbox" name="q8" value="1"><span class="radio-mark"></span> Старые технологические карты</label>
+            <label class="test-option checkbox-option"><input type="checkbox" name="q8" value="0"><span class="radio-mark"></span> Половник для супов</label>
+            <label class="test-option checkbox-option"><input type="checkbox" name="q8" value="1"><span class="radio-mark"></span> Личный телефон на столе</label>
+          </div>
+          <div class="test-explanation" id="exp8"></div>
+          <div class="q8-buttons">
+            <button class="btn-check" id="check8" onclick="checkQ8()">Проверить</button>
+            <button class="test-btn-next" id="btn8" onclick="goToNextQuestion(8)" style="display:none;">Дальше →</button>
+          </div>
+        </div>
+
+        <!-- Вопрос 9 (Интерактив) -->
+        <div class="test-card" id="q9">
+          <div class="test-decor-diamond"></div>
+          <h2>9. Найдите 7 лишних предметов на картинке</h2>
+          
+          <!-- Подсказка для мобильных -->
+          <div class="rotate-hint" id="rotateHint" style="display: flex; align-items: center; justify-content: center; gap: 8px; background: rgba(255,138,101,0.15); color: var(--text-graphite); padding: 8px 12px; border-radius: var(--radius-sm); font-weight: 700; margin-bottom: 15px; font-size: 13px; border: 1px solid var(--accent-coral);">
+            <span style="font-size: 20px; line-height: 1;">📱</span> 
+            <span style="text-align: left;">Поверните телефон горизонтально, чтобы было удобнее искать предметы!</span>
+          </div>
+          
+          <p style="margin-bottom: 16px; font-size: 15px; font-weight: 500; text-align: center;">Кликайте по предметам, которые считаете лишними на рабочем месте. При клике появится пояснение.</p>
+          
+          <div class="test-find-scene" id="findScene">
+            <button class="test-hotspot" style="top: 25.8%; left: 15.6%;" data-ok="1" data-msg="Смартфон — это личная вещь. По правилам, личные предметы не должны находиться на рабочем месте повара, чтобы не загрязнять продукты и инвентарь." data-sapin="п. 3.4 СанПиН 2.3/2.4.3590-20">📱</button>
+            <button class="test-hotspot" style="top: 21.4%; left: 28.3%;" data-ok="1" data-msg="Контейнер без маркировки — риск порчи продукта. Непонятно, что внутри и когда это приготовлено." data-sapin="п. 2.2 и 2.3 СанПиН 2.3/2.4.3590-20">🥫</button>
+            <button class="test-hotspot" style="top: 21.6%; left: 40.7%;" data-ok="1" data-msg="Электрочайник — лишний предмет на полке для инвентаря. Его место — в специально отведённой зоне для бытовой техники, а не среди кухонного инвентаря.">🫖</button>
+            <button class="test-hotspot" style="top: 24.2%; left: 55.2%;" data-ok="1" data-msg="Старые технологические карты — не используются в текущей работе. Их нужно убрать, чтобы не путаться в актуальных документах.">📄</button>
+            <button class="test-hotspot" style="top: 58.0%; left: 18.0%;" data-ok="1" data-msg="5 открывалок — лишнее количество. Достаточно одной, остальные нужно убрать в место хранения.">🍾</button>
+            <button class="test-hotspot" style="top: 84.8%; left: 42.0%;" data-ok="1" data-msg="Личная сумка — не место на рабочей полке. Она должна храниться в раздевалке или специально отведённом месте." data-sapin="п. 3.4 СанПиН 2.3/2.4.3590-20">🎒</button>
+            <button class="test-hotspot" style="top: 85.4%; left: 81.7%;" data-ok="1" data-msg="Бытовая химия — должна храниться отдельно от продуктов и инвентаря." data-sapin="п. 4.5 СанПиН 2.3/2.4.3590-20">🧴</button>
+            
+            <button class="test-hotspot" style="top: 21.8%; left: 69.8%;" data-ok="0" data-msg="Чистый нож в подставке — правильный предмет.">🔪</button>
+            <button class="test-hotspot" style="top: 24.5%; left: 83.1%;" data-ok="0" data-msg="Чистая доска — правильный предмет.">🪵</button>
+            <button class="test-hotspot" style="top: 58.4%; left: 50.2%;" data-ok="0" data-msg="Чистая доска для мяса — правильный предмет.">🪵</button>
+            <button class="test-hotspot" style="top: 49.9%; left: 80.3%;" data-ok="0" data-msg="Чистая миска — правильный предмет.">🥣</button>
+          </div>
+          
+          <div class="test-find-result" id="findResult">Найдено: 0 из 7 лишних</div>
+          
+          <div class="test-explanation" id="exp9" style="display: none;"></div>
+          
+          <!-- Кнопка с точными координатами -->
+          <button class="test-btn-next" id="btn9" onclick="goToNextQuestion(9)" style="display:none;">Показать результат →</button>
+        </div>
+
+        <!-- Результат -->
+        <div class="test-card test-result-screen" id="testResult">
+          <div class="test-decor-diamond"></div>
+          <h2>Тест завершён!</h2>
+          <div class="test-result-score" id="finalScore">0</div>
+          <div class="test-result-total">из 9</div>
+          <div class="test-result-text" id="finalText"></div>
+          <button class="btn" onclick="nextSlide()" style="margin-top: 20px;">Завершить →</button>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Слайд 15: Финал -->
+  <section class="slide" data-module="Финал">
+    <div class="slide-content cover">
+      <div class="demo-badge">Демо-версия</div>
+      <h1><span class="text-fill-coral">Поздравляем!</span></h1>
+      <p class="cover-subtitle" style="font-weight: 600; margin-bottom: 16px;">Вы завершили демонстрационную часть курса.</p>
+      <p class="cover-subtitle">Применяйте принципы 5С на своей кухне, и порядок станет вашей привычкой.</p>
+      <button class="btn large" onclick="currentSlideIndex = 0; updateNavigation();">В начало →</button>
+    </div>
+  </section>
+
+</main>
+
+<!-- МОБИЛЬНОЕ МОДАЛЬНОЕ ОКНО (универсальное) -->
+<div class="mobile-modal-overlay" id="mobileModal">
+  <div class="mobile-modal">
+    <button class="close-btn" onclick="closeMobileModal()">✕</button>
+    <h4 id="mobileModalTitle">Заголовок</h4>
+    <p id="mobileModalText">Текст пояснения...</p>
+  </div>
+</div>
+
+<!-- Нижняя навигация -->
+<nav class="footer" id="mainFooter">
+  <button class="btn ghost" id="prevBtn" onclick="prevSlide()">← Назад</button>
+  <button class="btn" id="nextBtn" onclick="nextSlide()">Далее →</button>
+</nav>
+
+<!-- ВСПЛЫВАЮЩЕЕ ОКНО (для 9 вопроса) -->
+<div class="hotspot-popup" id="hotspotPopup">
+  <button class="close-popup-btn" id="closePopupBtn">✕</button>
+  <strong id="popupTitle"></strong>
+  <p id="popupText"></p>
+  <a href="https://docs.cntd.ru/document/1200165937" target="_blank" id="popupLink">Открыть полный текст СанПиН 2.3/2.4.3590-20</a>
+</div>
+
+<style>
+  /* Дополнительные стили для 5-го экрана */
+  .thought-cloud {
+    position: relative; width: 550px; height: 430px;
+    background: var(--secondary-bg); border: 4px solid var(--border-color);
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    box-shadow: var(--solid-shadow); animation: float 4s ease-in-out infinite;
+  }
+  .thought-cloud::before, .thought-cloud::after, .thought-cloud .bubble-3 {
+    content: ""; position: absolute; background: var(--secondary-bg);
+    border: 4px solid var(--border-color); border-radius: 50%; box-shadow: 2px 2px 0 var(--shadow-color);
+  }
+  .thought-cloud::before { width: 50px; height: 50px; bottom: -25px; left: 50px; }
+  .thought-cloud::after { width: 25px; height: 25px; bottom: -60px; left: 25px; }
+  .thought-cloud .bubble-3 { width: 80px; height: 80px; top: -30px; right: 80px; z-index: -1; }
+  @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0px); } }
+  
+  .poll-info-box {
+    position: absolute; width: 100%; height: 100%; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; text-align: center; padding: 40px; z-index: 10;
+  }
+  .active-content {
+    display: none; flex-direction: column; align-items: center; justify-content: flex-start;
+    width: 100%; height: 100%; padding-top: 30px;
+  }
+  .poll-info-box.active .active-content {
+    display: flex; animation: slideUpFade 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  }
+  @keyframes slideUpFade {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  .poll-info-box.active .loading-dots { display: none; }
+  
+  .icon-bulb-img {
+    width: 120px; height: 120px; object-fit: contain; margin-bottom: 10px;
+    display: block; flex-shrink: 0; filter: drop-shadow(0 0 15px rgba(255, 138, 101, 0.6));
+    animation: pulse-glow 2s infinite alternate;
+  }
+  @keyframes pulse-glow {
+    0% { filter: drop-shadow(0 0 10px rgba(255, 138, 101, 0.4)); }
+    100% { filter: drop-shadow(0 0 25px rgba(255, 138, 101, 0.8)); }
+  }
+  
+  .poll-info-box p { font-family: var(--font-heading); font-weight: 700; color: var(--dark-til); font-size: 16px; line-height: 1.4; margin: 0; padding: 0 10px; }
+  .poll-info-box .highlight { position: relative; display: inline-block; z-index: 1; }
+  .poll-info-box .highlight::after {
+    content: ""; position: absolute; left: 0; bottom: 0px; width: 100%; height: 5px;
+    background: var(--accent-coral); opacity: 0.6; z-index: -1; border-radius: 4px;
+    transform: rotate(-1deg); border-bottom-left-radius: 2px 4px; border-bottom-right-radius: 2px 4px;
+  }
+  
+  .loading-dots { display: flex; gap: 10px; margin-top: 10px; }
+  .loading-dots span {
+    width: 14px; height: 14px; background-color: var(--primary); border-radius: 50%;
+    animation: bounce 1.4s infinite ease-in-out both;
+  }
+  .loading-dots span:nth-child(1) { animation-delay: -0.48s; }
+  .loading-dots span:nth-child(2) { animation-delay: -0.32s; }
+  .loading-dots span:nth-child(3) { animation-delay: -0.16s; }
+  .loading-dots span:nth-child(4) { animation-delay: 0s; }
+  .loading-dots span:nth-child(5) { animation-delay: 0.16s; }
+  @keyframes bounce { 0%, 80%, 100% { transform: scale(0); opacity: 0; } 40% { transform: scale(1); opacity: 1; } }
+  
+  /* Блок мотивации снизу (встроен в поток) */
+  .cta-block {
+    position: absolute;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: var(--secondary-bg);
+    border: 2px dashed var(--primary);
+    border-radius: var(--radius-sm);
+    padding: 10px 16px;
+    text-align: center;
+    animation: fadeIn 0.4s ease;
+    box-sizing: border-box;
+    z-index: 5;
+  }
+  .cta-block.active {
+    display: flex;
+  }
+  .cta-text { 
+    font-family: var(--font-body); font-weight: 700; color: var(--dark-til); 
+    font-size: 14px; line-height: 1.4;
+    white-space: normal;
+  }
+
+  /* Анимация повара */
+  @keyframes sway { 0% { transform: rotate(-2deg); } 50% { transform: rotate(2deg); } 100% { transform: rotate(-2deg); } }
+  .chef-animation { animation: sway 4s ease-in-out infinite; }
+  
+  /* Стили для финального слайда */
+  .demo-badge {
+    background: var(--secondary-bg);
+    border: 2px solid var(--primary);
+    color: var(--dark-til);
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: 16px;
+    padding: 8px 24px;
+    border-radius: 99px;
+    margin-bottom: 24px;
+    display: inline-block;
+    box-shadow: var(--solid-shadow-sm);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* Кнопка закрытия попапа (скрыта на десктопе) */
+  .close-popup-btn {
+    display: none;
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: var(--text-graphite);
+    font-weight: 800;
+    line-height: 1;
+    z-index: 10000;
+  }
+</style>
+
+<script>
+  // ==========================================
+  // 1. НАВИГАЦИЯ ПО СЛАЙДАМ И САЙДБАР
+  // ==========================================
+  let currentSlideIndex = 0;
+  const slides = document.querySelectorAll('.slide');
+  const totalSlides = slides.length;
+  const sidebarList = document.getElementById('sidebarList');
+  const mainFooter = document.getElementById('mainFooter');
+
+  document.getElementById('slideTotal').textContent = totalSlides;
+
+  slides.forEach((slide, index) => {
+    const el = document.createElement('div');
+    el.className = 'sidebar-item';
+    el.textContent = `${index + 1}. ${slide.getAttribute('data-module') || 'Слайд'}`;
+    el.onclick = () => {
+      currentSlideIndex = index;
+      updateNavigation();
+      toggleSidebar();
+    };
+    sidebarList.appendChild(el);
+  });
+
+  function updateNavigation() {
+    slides.forEach(slide => slide.classList.remove('active'));
+    slides[currentSlideIndex].classList.add('active');
+    
+    document.getElementById('slideNum').textContent = currentSlideIndex + 1;
+    document.getElementById('progressFill').style.width = ((currentSlideIndex + 1) / totalSlides) * 100 + '%';
+    
+    const moduleName = slides[currentSlideIndex].getAttribute('data-module');
+    if (moduleName) document.getElementById('headerModule').textContent = moduleName;
+
+    // Скрываем футер на обложке, 8-м слайде (обложка модуля) и тесте
+    if (currentSlideIndex === 0 || currentSlideIndex === 7 || slides[currentSlideIndex].id === 'slide-test') {
+      mainFooter.classList.add('hidden');
+    } else {
+      mainFooter.classList.remove('hidden');
+      document.getElementById('prevBtn').disabled = currentSlideIndex === 0;
+      document.getElementById('nextBtn').style.display = currentSlideIndex === totalSlides - 1 ? 'none' : 'inline-flex';
+    }
+
+    // Блокировка кнопки "Далее" для интерактивных слайдов
+    const nextBtn = document.getElementById('nextBtn');
+    if (slides[currentSlideIndex].id === 'slide-checklist') {
+      checkChecklist();
+    } else if (currentSlideIndex === 9) { // Слайд 10 (индекс 9) - Пазл
+      nextBtn.disabled = (matchedPairs < totalPairs);
+    } else {
+      nextBtn.disabled = false;
+    }
+
+    const items = sidebarList.querySelectorAll('.sidebar-item');
+    items.forEach((item, idx) => {
+      item.classList.toggle('active', idx === currentSlideIndex);
+    });
+
+    if (slides[currentSlideIndex].id === 'slide-test') {
+      resetTest();
+    }
+  }
+
+  window.nextSlide = () => { if (currentSlideIndex < totalSlides - 1) { currentSlideIndex++; updateNavigation(); } };
+  window.prevSlide = () => { if (currentSlideIndex > 0) { currentSlideIndex--; updateNavigation(); } };
+  window.toggleSidebar = () => document.getElementById('sidebar').classList.toggle('collapsed');
+
+  // ==========================================
+  // 2. ОПРОС (Слайд 6)
+  // ==========================================
+  const pollInfoBox = document.getElementById('pollInfoBox');
+  const pollInfoText = document.getElementById('pollInfoText');
+  const pollCheckboxes = document.querySelectorAll('#pollOptions input[type="checkbox"]');
+  const ctaBlock = document.getElementById('ctaBlock');
+  const ctaText = document.getElementById('ctaText');
+
+  window.updatePollPopup = function(checkbox, infoText, motivationText) {
+    if (checkbox.checked) {
+      pollCheckboxes.forEach(cb => {
+        if (cb !== checkbox) cb.checked = false;
+      });
+      
+      // На мобильных показываем модалку
+      if (window.innerWidth <= 900) {
+        openMobileModal('Пояснение (5С):', infoText + '<br><br>' + motivationText);
+      } else {
+        pollInfoText.innerHTML = infoText;
+        pollInfoBox.classList.remove('active');
+        void pollInfoBox.offsetWidth;
+        pollInfoBox.classList.add('active');
+        ctaText.innerHTML = motivationText;
+        ctaBlock.classList.add('active');
+      }
+    } else {
+      const anyChecked = Array.from(pollCheckboxes).some(cb => cb.checked);
+      if (!anyChecked) {
+        pollInfoBox.classList.remove('active');
+        ctaBlock.classList.remove('active');
+      }
+    }
+  };
+
+  // ==========================================
+  // 3. ЧЕК-ЛИСТ (Слайд 12)
+  // ==========================================
+  window.toggleChecklistItem = function(li) {
+    const checkbox = li.querySelector('input[type="checkbox"]');
+    checkbox.checked = !checkbox.checked;
+    checkChecklist();
+  };
+
+  window.checkChecklist = function() {
+    const checkboxes = document.querySelectorAll('#checklist-items input[type="checkbox"]');
+    const anyChecked = Array.from(checkboxes).some(cb => cb.checked);
+    const nextBtn = document.getElementById('nextBtn');
+    
+    if (anyChecked) {
+      nextBtn.disabled = false;
+    } else {
+      nextBtn.disabled = true;
+    }
+  };
+
+  // ==========================================
+  // 4. ПАЗЛ (Слайд 10)
+  // ==========================================
+  let selectedCriterion = null;
+  let matchedPairs = 0;
+  const totalPairs = 4;
+  const puzzleMessage = document.getElementById('puzzleMessage');
+  const nextBtn = document.getElementById('nextBtn');
+
+  window.selectCriterion = function(el) {
+    if (el.classList.contains('matched')) return;
+    document.querySelectorAll('.criterion').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedCriterion = el;
+  };
+
+  window.selectExample = function(el) {
+    if (el.classList.contains('matched')) return;
+    
+    if (!selectedCriterion) {
+      puzzleMessage.innerHTML = '<div class="callout" style="background: var(--accent-coral); color: white; border-color: var(--border-color); font-size: 16px; padding: 10px 20px; display: inline-block;">Сначала выберите критерий слева!</div>';
+      puzzleMessage.style.display = 'block';
+      setTimeout(() => { puzzleMessage.style.display = 'none'; }, 2000);
+      return;
+    }
+
+    const criterionId = selectedCriterion.dataset.id;
+    const exampleId = el.dataset.id;
+
+    if (criterionId === exampleId) {
+      selectedCriterion.classList.remove('selected');
+      selectedCriterion.classList.add('matched');
+      el.classList.add('matched');
+      
+      selectedCriterion = null;
+      matchedPairs++;
+      puzzleMessage.style.display = 'none';
+
+      if (matchedPairs === totalPairs) {
+        // Показываем ОС при полном успехе
+        puzzleMessage.innerHTML = `
+          <div class="callout" style="background: var(--secondary-bg); border-color: var(--primary); font-size: 18px; padding: 12px 24px; display: inline-block; margin: 0 auto; animation: popIn 0.4s ease;">
+            🎉 <strong>Отлично!</strong> Вы соединили все пары. Теперь вы знаете, что считается лишним.
+          </div>
+        `;
+        puzzleMessage.style.display = 'block';
+        if (currentSlideIndex === 9) nextBtn.disabled = false;
+      }
+    } else {
+      el.classList.add('wrong');
+      puzzleMessage.innerHTML = '<div class="callout" style="background: var(--accent-coral); color: white; border-color: var(--border-color); font-size: 16px; padding: 10px 20px; display: inline-block;">Неверно. Попробуйте еще раз.</div>';
+      puzzleMessage.style.display = 'block';
+      
+      setTimeout(() => {
+        el.classList.remove('wrong');
+        puzzleMessage.style.display = 'none';
+      }, 1500);
+    }
+  };
+
+  // ==========================================
+  // 5. ТЕСТ
+  // ==========================================
+  const totalQuestions = 9;
+  let score = 0;
+  let answered = [false, false, false, false, false, false, false, false, false];
+
+  const explanations = {
+    1: "5С — это система организации рабочего места. Она включает 5 шагов: сортировка, расположение, уборка, стандартизация, совершенствование.",
+    2: "Без системы сотрудники тратят время на поиск нужных предметов, переделки и исправление ошибок. 5С устраняет эти потери.",
+    3: "Красная бирка не означает «выбросить». Она означает «разобраться»: вернуть, передать, утилизировать.",
+    4: "Красная бирка — это инструмент. Нужно пометить предмет, записать его, переместить в зону карантина и решить судьбу в течение 1–3 дней.",
+    5: "Первое «С» — это Сортировка. Именно с неё начинается порядок.",
+    6: "Сортировка — это отделение нужного от лишнего. Лишнее убирается, остаётся только то, что нужно для работы.",
+    7: "Лишнее количество предметов — это тоже нарушение сортировки. На столе должно быть ровно столько, сколько нужно для работы.",
+    8: "Просроченный соус, запасной нож (3-4 штуки), старые технологические карты и личный телефон — это лишнее. Овощи и половник — нужны для работы."
+  };
+
+  window.checkAnswer = function(qNum) {
+    const card = document.getElementById(`q${qNum}`);
+    if (answered[qNum - 1]) return;
+
+    const selected = card.querySelector('input[type="radio"]:checked');
+    if (!selected) return;
+
+    const allInputs = card.querySelectorAll('input[type="radio"]');
+    const isCorrect = selected.value === '1';
+    
+    allInputs.forEach(inp => inp.closest('.test-option').classList.remove('selected'));
+    selected.closest('.test-option').classList.add('selected');
+
+    if (isCorrect) {
+      selected.closest('.test-option').classList.add('correct');
+      score++;
+      answered[qNum - 1] = true;
+      
+      allInputs.forEach(inp => inp.closest('.test-option').style.pointerEvents = 'none');
+
+      const expBox = card.querySelector('.test-explanation');
+      expBox.innerHTML = `<strong>Верно!</strong> ${explanations[qNum]}`;
+      expBox.classList.add('show');
+
+      const btn = card.querySelector('.test-btn-next');
+      btn.style.display = 'inline-block';
+    } else {
+      selected.closest('.test-option').classList.add('wrong');
+      
+      const expBox = card.querySelector('.test-explanation');
+      expBox.innerHTML = `<strong style="color: #FF8A65;">Не совсем.</strong> Попробуйте еще раз.`;
+      expBox.classList.add('show');
+      
+      setTimeout(() => {
+        selected.closest('.test-option').classList.remove('wrong');
+        selected.closest('.test-option').classList.remove('selected');
+        expBox.classList.remove('show');
+        selected.checked = false;
+      }, 1500);
+    }
+  };
+
+  // Вопрос 8
+  document.querySelectorAll('.checkbox-option').forEach(option => {
+    option.addEventListener('click', function(e) {
+      e.preventDefault();
+      const idx = 7;
+      if (answered[idx]) return;
+      const inp = this.querySelector('input');
+      inp.checked = !inp.checked;
+      this.classList.toggle('selected', inp.checked);
+    });
+  });
+
+  window.checkQ8 = function() {
+    const idx = 7;
+    if (answered[idx]) return;
+    
+    const allCheckboxes = Array.from(document.querySelectorAll('input[name="q8"]'));
+    const selectedIndices = [];
+    allCheckboxes.forEach((cb, i) => {
+      if (cb.checked) selectedIndices.push(i);
+    });
+    
+    // Правильные ответы: 1 (просроченный соус), 2 (запасной нож), 3 (старые карты), 5 (личный телефон)
+    const correctIndices = [1, 2, 3, 5]; 
+    const isCorrect = selectedIndices.length === correctIndices.length && 
+                      selectedIndices.every((val, index) => val === correctIndices[index]);
+    
+    if (isCorrect) {
+      answered[idx] = true;
+      score++;
+      allCheckboxes.forEach((cb, i) => {
+        if (correctIndices.includes(i)) cb.closest('.test-option').classList.add('correct');
+      });
+      
+      document.getElementById('exp8').innerHTML = `<strong>Верно!</strong> ${explanations[8]}`;
+      document.getElementById('exp8').classList.add('show');
+      
+      document.getElementById('check8').style.display = 'none';
+      document.getElementById('btn8').style.display = 'inline-block';
+    } else {
+      const exp = document.getElementById('exp8');
+      exp.innerHTML = `<strong style="color: #FF8A65;">Не совсем.</strong> Вспомните критерии «лишнего»: просрочка, лишнее количество, старое, личные вещи.`;
+      exp.classList.add('show');
+      
+      setTimeout(() => {
+        exp.classList.remove('show');
+        allCheckboxes.forEach(cb => {
+          cb.checked = false;
+          cb.closest('.test-option').classList.remove('selected');
+        });
+      }, 2000);
+    }
+  };
+
+  // Вопрос 9 (Попап)
+  const scene = document.getElementById('findScene');
+  const popup = document.getElementById('hotspotPopup');
+  const popupTitle = document.getElementById('popupTitle');
+  const popupText = document.getElementById('popupText');
+  const popupLink = document.getElementById('popupLink');
+  const closePopupBtn = document.getElementById('closePopupBtn');
+
+  if (scene) {
+    const hotspots = Array.from(scene.querySelectorAll('.test-hotspot'));
+    const totalCorrect = hotspots.filter(h=>h.dataset.ok==='1').length;
+    let found = 0;
+
+    document.addEventListener('click', (e) => {
+      if (!scene.contains(e.target) && !popup.contains(e.target) && e.target !== closePopupBtn) {
+        popup.classList.remove('show');
+      }
+    });
+
+    closePopupBtn.addEventListener('click', () => {
+      popup.classList.remove('show');
+    });
+
+    hotspots.forEach(h => {
+      h.addEventListener('click', (e) => {
+        e.stopPropagation(); 
+        
+        if(h.classList.contains('correct') || h.classList.contains('wrong')) {
+          if (h.dataset.ok === '1') showPopup(h, popup, popupTitle, popupText, popupLink);
+          return;
+        }
+        
+        const ok = h.dataset.ok === '1';
+        
+        if(ok){
+          h.classList.add('correct');
+          h.textContent = '✓';
+          found++;
+          document.getElementById('findResult').textContent = `Найдено: ${found} из ${totalCorrect} лишних`;
+          document.getElementById('findResult').className = 'test-find-result ok';
+          
+          showPopup(h, popup, popupTitle, popupText, popupLink);
+
+          if(found === totalCorrect){
+            document.getElementById('findResult').textContent = `Отлично! Найдено ${totalCorrect} из ${totalCorrect}.`;
+            if (!answered[8]) {
+              answered[8] = true;
+              score++;
+              const exp9 = document.getElementById('exp9');
+              exp9.innerHTML = `<strong>Верно!</strong> Вы успешно нашли все лишние предметы.`;
+              exp9.style.display = 'block';
+              document.getElementById('btn9').style.display = 'inline-block';
+            }
+          }
+        } else {
+          h.classList.add('wrong');
+          h.textContent = '✕';
+          document.getElementById('findResult').textContent = `Это правильный предмет. Ищите лишнее.`;
+          document.getElementById('findResult').className = 'test-find-result err';
+          
+          popup.classList.remove('show');
+
+          setTimeout(()=>{
+            h.classList.remove('wrong');
+            h.textContent = '';
+          }, 900);
+        }
+      });
+    });
+
+    function showPopup(el, popup, title, text, link) {
+      title.textContent = el.dataset.sapin ? 'СанПиН: ' + el.dataset.sapin : 'Пояснение (5С):';
+      text.textContent = el.dataset.msg;
+      
+      if (el.dataset.sapin) {
+        link.style.display = 'inline-block';
+      } else {
+        link.style.display = 'none';
+      }
+
+      if (window.innerWidth > 900) {
+        const elRect = el.getBoundingClientRect();
+        const left = elRect.left + (elRect.width / 2);
+        const top = elRect.top;
+        
+        popup.style.left = `${left - 160}px`; 
+        popup.style.top = `${top - popup.offsetHeight - 15}px`; 
+        
+        popup.classList.add('show');
+        popup.classList.remove('pos-bottom');
+
+        if (top - popup.offsetHeight - 15 < 0) {
+          popup.style.top = `${elRect.bottom + 15}px`;
+          popup.classList.add('pos-bottom');
+        }
+      } else {
+        popup.classList.add('show');
+      }
+    }
+  }
+
+  window.goToNextQuestion = function(qNum) {
+    document.getElementById(`q${qNum}`).classList.remove('active');
+    document.getElementById('hotspotPopup').classList.remove('show');
+    
+    if (qNum < totalQuestions) {
+      document.getElementById(`q${qNum + 1}`).classList.add('active');
+    } else {
+      showResult();
+    }
+  };
+
+  function showResult() {
+    document.getElementById('testResult').classList.add('active');
+    document.getElementById('finalScore').textContent = score;
+    
+    let text = "";
+    if (score === totalQuestions) {
+      text = "Идеально! Вы отлично усвоили материал.";
+    } else if (score >= totalQuestions * 0.7) {
+      text = "Отличный результат! Вы хорошо поняли основные принципы.";
+    } else if (score >= totalQuestions * 0.5) {
+      text = "Неплохо, но есть над чем поработать. Вернитесь к модулю и повторите.";
+    } else {
+      text = "Стоит пересмотреть модуль. Попробуйте ещё раз!";
+    }
+    document.getElementById('finalText').textContent = text;
+  }
+
+  function resetTest() {
+    score = 0;
+    answered = [false, false, false, false, false, false, false, false, false];
+    
+    for (let i = 1; i <= 7; i++) {
+      const card = document.getElementById(`q${i}`);
+      card.classList.remove('active');
+      
+      const inputs = card.querySelectorAll('input[type="radio"]');
+      inputs.forEach(inp => {
+        inp.checked = false;
+        inp.disabled = false;
+        inp.closest('.test-option').classList.remove('selected', 'correct', 'wrong');
+        inp.closest('.test-option').style.pointerEvents = 'auto';
+      });
+
+      const exp = card.querySelector('.test-explanation');
+      exp.classList.remove('show');
+      exp.innerHTML = '';
+      
+      const btn = card.querySelector('.test-btn-next');
+      btn.style.display = 'none';
+    }
+
+    const q8Card = document.getElementById('q8');
+    q8Card.classList.remove('active');
+    const q8Checkboxes = q8Card.querySelectorAll('input[type="checkbox"]');
+    q8Checkboxes.forEach(cb => {
+      cb.checked = false;
+      cb.closest('.test-option').classList.remove('selected', 'correct');
+    });
+    const exp8 = document.getElementById('exp8');
+    exp8.classList.remove('show');
+    exp8.innerHTML = '';
+    document.getElementById('check8').style.display = 'inline-block';
+    document.getElementById('btn8').style.display = 'none';
+
+    if (scene) {
+      const hotspots = scene.querySelectorAll('.test-hotspot');
+      hotspots.forEach(h => {
+        h.classList.remove('correct', 'wrong');
+      });
+      const icons = ['📱', '🥫', '🫖', '📄', '🍾', '🎒', '🧴', '🔪', '🪵', '🪵', '🥣'];
+      hotspots.forEach((h, idx) => h.textContent = icons[idx]);
+
+      document.getElementById('findResult').textContent = `Найдено: 0 из 7 лишних`;
+      document.getElementById('findResult').className = 'test-find-result';
+      document.getElementById('exp9').style.display = 'none';
+      document.getElementById('btn9').style.display = 'none';
+      popup.classList.remove('show');
+    }
+
+    document.getElementById('testResult').classList.remove('active');
+    document.getElementById('q1').classList.add('active');
+  }
+
+  // ==========================================
+  // 6. ТУЛТИП (БОКОВЫЕ ОКНА ДЛЯ СЛАЙДА 4)
+  // ==========================================
+  const tooltip = document.getElementById('tooltip');
+  const ttTitle = document.getElementById('ttTitle');
+  const ttDesc = document.getElementById('ttDesc');
+  const ttDot = document.getElementById('ttDot');
+  const stepCircles = document.querySelectorAll('.step-circle');
+  const circleContainer = document.querySelector('.circle-container');
+
+  stepCircles.forEach(circle => {
+    circle.addEventListener('mouseenter', (e) => {
+      if (window.innerWidth <= 900) return; // На мобильных тултип не нужен
+      
+      ttTitle.textContent = circle.dataset.title;
+      ttDesc.textContent = circle.dataset.desc;
+      ttDot.style.background = circle.dataset.color;
+      
+      const parentClass = circle.parentElement.className;
+      const stepMatch = parentClass.match(/step-(\d)/);
+      if (stepMatch) {
+        tooltip.setAttribute('data-step', stepMatch[1]);
+      }
+      
+      tooltip.classList.add('visible');
+    });
+
+    circle.addEventListener('mouseleave', () => {
+      if (window.innerWidth <= 900) return;
+      tooltip.classList.remove('visible');
+    });
+  });
+
+  // ==========================================
+  // 7. МОБИЛЬНЫЕ МОДАЛКИ
+  // ==========================================
+  const mobileModal = document.getElementById('mobileModal');
+  const modalTitle = document.getElementById('mobileModalTitle');
+  const modalText = document.getElementById('mobileModalText');
+
+  window.openMobileModal = function(title, text) {
+    modalTitle.innerHTML = title;
+    modalText.innerHTML = text;
+    mobileModal.classList.add('active');
+  };
+
+  window.closeMobileModal = function() {
+    mobileModal.classList.remove('active');
+  };
+
+  // Закрытие по клику вне окна
+  mobileModal.addEventListener('click', (e) => {
+    if (e.target === mobileModal) {
+      closeMobileModal();
+    }
+  });
+
+  // --- ОБРАБОТКА КЛИКОВ ДЛЯ МОБИЛЬНОЙ ВЕРСИИ ---
+  document.addEventListener('DOMContentLoaded', () => {
+    // 1. Клик по кругам 5С (Слайд 4)
+    document.querySelectorAll('.step-circle').forEach(circle => {
+      circle.addEventListener('click', (e) => {
+        if (window.innerWidth > 900) return;
+        
+        const title = circle.dataset.title;
+        const desc = circle.dataset.desc;
+        openMobileModal(title, desc);
+        
+        // Отмечаем, что круг просмотрен
+        circle.classList.add('viewed');
+        checkAllCirclesViewed();
+      });
+    });
+
+    // 2. Клик по флип-карточкам (Слайд 5)
+    document.querySelectorAll('.flip-card').forEach(card => {
+      card.addEventListener('click', () => {
+        if (window.innerWidth > 900) return;
+        card.classList.toggle('flipped');
+      });
+    });
+  });
+
+  // Функция проверки, все ли круги просмотрены
+  function checkAllCirclesViewed() {
+    const allCircles = document.querySelectorAll('.step-circle');
+    const viewedCircles = document.querySelectorAll('.step-circle.viewed');
+    const nextBtn = document.getElementById('nextBtn');
+    
+    if (allCircles.length === viewedCircles.length) {
+      nextBtn.disabled = false;
+    } else {
+      nextBtn.disabled = true;
+    }
+  }
+
+  // Инициализация: если мы на 4-м слайде, блокируем кнопку "Далее"
+  function initSlide4() {
+    if (window.innerWidth <= 900) {
+      const nextBtn = document.getElementById('nextBtn');
+      if (document.querySelectorAll('.slide')[3] && document.querySelectorAll('.slide')[3].classList.contains('active')) {
+        const allCircles = document.querySelectorAll('.step-circle');
+        const viewedCircles = document.querySelectorAll('.step-circle.viewed');
+        nextBtn.disabled = (allCircles.length !== viewedCircles.length);
+      }
+    }
+  }
+
+  // Переопределяем updateNavigation для проверки 4-го слайда
+  const originalUpdateNavigation = updateNavigation;
+  window.updateNavigation = function() {
+    originalUpdateNavigation();
+    if (window.innerWidth <= 900 && currentSlideIndex === 3) {
+      const nextBtn = document.getElementById('nextBtn');
+      const allCircles = document.querySelectorAll('.step-circle');
+      const viewedCircles = document.querySelectorAll('.step-circle.viewed');
+      nextBtn.disabled = (allCircles.length !== viewedCircles.length);
+    }
+  };
+
+  // Переопределяем nextSlide для проверки
+  const originalNextSlide = window.nextSlide;
+  window.nextSlide = function() {
+    if (window.innerWidth <= 900 && currentSlideIndex === 3) {
+      const allCircles = document.querySelectorAll('.step-circle');
+      const viewedCircles = document.querySelectorAll('.step-circle.viewed');
+      if (allCircles.length !== viewedCircles.length) {
+        alert('Пожалуйста, откройте все 5 шагов, чтобы продолжить.');
+        return;
+      }
+    }
+    originalNextSlide();
+  };
+
+  updateNavigation();
+
+</script>
+</body>
+</html>
