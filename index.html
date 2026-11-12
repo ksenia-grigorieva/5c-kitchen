@@ -402,18 +402,6 @@
   .btn-check { background: var(--accent-coral); color: #fff; font-family: var(--font-heading); font-weight: 800; font-size: 18px; padding: 12px 24px; border: 2px solid var(--border-color); border-radius: var(--radius-sm); cursor: pointer; box-shadow: 4px 4px 0 var(--border-color); transition: all 0.15s ease; }
   .btn-check:hover { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--border-color); }
 
-  /* Сайдбар */
-  .sidebar { position: fixed; top: 60px; left: 0; bottom: 0; width: 260px; background: var(--base-cream); border-right: 2px solid var(--border-color); z-index: 200; transition: transform 0.3s ease; display: flex; flex-direction: column; }
-  .sidebar.collapsed { transform: translateX(-100%); }
-  .sidebar-header { padding: 16px; border-bottom: 2px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; font-weight: 800; color: var(--dark-til); }
-  .sidebar-list { flex: 1; overflow-y: auto; padding: 10px; }
-  .sidebar-item { padding: 8px 12px; margin-bottom: 4px; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600; transition: background 0.2s; color: var(--text-graphite); }
-  .sidebar-item:hover { background: var(--secondary-bg); }
-  .sidebar-item.active { background: var(--primary); color: #fff; }
-  
-  .sidebar-toggle { position: fixed; top: 60px; left: 260px; width: 30px; height: 40px; background: var(--accent-coral); border: 2px solid var(--border-color); border-left: none; border-radius: 0 8px 8px 0; color: #fff; cursor: pointer; z-index: 201; display: flex; align-items: center; justify-content: center; transition: left 0.3s ease; }
-  .sidebar.collapsed + .sidebar-toggle { left: 0; }
-
   /* =========================================
      СТИЛИ ДЛЯ ПАЗЛА (10-й слайд)
      ========================================= */
@@ -690,11 +678,12 @@
       display: block !important; 
       font-family: var(--font-heading);
       font-weight: 800;
-      font-size: 15px;
+      font-size: 18px; /* Увеличено с 15 до 18 */
       color: var(--dark-til);
-      margin-bottom: 8px;
+      margin-bottom: 12px;
       margin-top: 5px;
       text-align: center;
+      line-height: 1.4;
     }
 
     /* 3. Принудительно возвращаем 2 колонки для пазла, 
@@ -711,10 +700,10 @@
       margin-bottom: 0 !important;
     }
 
-    /* 5. Делаем текст в плашках чуть меньше, чтобы влезал в экран */
+    /* 5. Делаем текст в плашках чуть больше (как на десктопе) */
     .puzzle-item { 
-      font-size: 13px !important; 
-      padding: 10px !important; 
+      font-size: 16px !important; /* Увеличено с 13 до 16 */
+      padding: 12px !important; 
       line-height: 1.3 !important; 
     }
 
@@ -729,16 +718,6 @@
 </style>
 </head>
 <body>
-
-<!-- Сайдбар -->
-<div class="sidebar collapsed" id="sidebar">
-  <div class="sidebar-header">
-    <span>Навигация</span>
-    <button class="btn ghost" onclick="toggleSidebar()" style="padding: 4px 8px; font-size: 14px;">✕</button>
-  </div>
-  <div class="sidebar-list" id="sidebarList"></div>
-</div>
-<button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
 
 <header>
   <div class="header-inner">
@@ -1067,8 +1046,8 @@
       <p class="desktop-desc" style="font-weight: 600; margin-bottom: 15px;">Слева — критерии «лишнего». Справа — примеры. Соедините критерий с подходящим примером, кликая сначала на критерий, затем на пример.</p>
       
       <!-- Мобильное описание (скрыто на десктопе) -->
-      <p class="mobile-heading" style="display:none; font-size: 15px; font-weight: 500; color: var(--text-graphite); margin-bottom: 15px;">
-        Нажмите на критерий, затем на пример.
+      <p class="mobile-heading" style="display:none; font-size: 18px; font-weight: 600; color: var(--text-graphite); margin-bottom: 15px; line-height: 1.4;">
+        Соотнесите критерии «лишнего» с подходящими примерами. Нажмите сначала на критерий, а затем на пример.
       </p>
 
       <div style="display: flex; gap: 20px; margin-top: 10px; flex-wrap: wrap;">
@@ -1092,10 +1071,10 @@
         </div>
       </div>
 
-      <!-- Блок ОС (обратной связи) -->
+      <!-- Блок ОС (обратной связи) - ДЕСКТОП -->
       <div id="puzzleMessage" style="margin-top: 20px; text-align: center; display: none;">
         <div class="callout" style="display: inline-block; font-size: 18px; padding: 12px 24px; margin: 0 auto; animation: popIn 0.4s ease;">
-          🎉 <strong>Отлично!</strong> Вы соединили все пары. Теперь вы знаете, что считается лишним.
+          <strong>Отлично!</strong> Вы соединили все пары. Теперь вы знаете, что считается лишним.
         </div>
       </div>
     </div>
@@ -1513,22 +1492,9 @@
   let currentSlideIndex = 0;
   const slides = document.querySelectorAll('.slide');
   const totalSlides = slides.length;
-  const sidebarList = document.getElementById('sidebarList');
   const mainFooter = document.getElementById('mainFooter');
 
   document.getElementById('slideTotal').textContent = totalSlides;
-
-  slides.forEach((slide, index) => {
-    const el = document.createElement('div');
-    el.className = 'sidebar-item';
-    el.textContent = `${index + 1}. ${slide.getAttribute('data-module') || 'Слайд'}`;
-    el.onclick = () => {
-      currentSlideIndex = index;
-      updateNavigation();
-      toggleSidebar();
-    };
-    sidebarList.appendChild(el);
-  });
 
   function updateNavigation() {
     slides.forEach(slide => slide.classList.remove('active'));
@@ -1559,11 +1525,6 @@
       nextBtn.disabled = false;
     }
 
-    const items = sidebarList.querySelectorAll('.sidebar-item');
-    items.forEach((item, idx) => {
-      item.classList.toggle('active', idx === currentSlideIndex);
-    });
-
     if (slides[currentSlideIndex].id === 'slide-test') {
       resetTest();
     }
@@ -1571,7 +1532,6 @@
 
   window.nextSlide = () => { if (currentSlideIndex < totalSlides - 1) { currentSlideIndex++; updateNavigation(); } };
   window.prevSlide = () => { if (currentSlideIndex > 0) { currentSlideIndex--; updateNavigation(); } };
-  window.toggleSidebar = () => document.getElementById('sidebar').classList.toggle('collapsed');
 
   // ==========================================
   // 2. ОПРОС (Слайд 6)
@@ -1649,9 +1609,13 @@
     if (el.classList.contains('matched')) return;
     
     if (!selectedCriterion) {
-      puzzleMessage.innerHTML = '<div class="callout" style="background: var(--accent-coral); color: white; border-color: var(--border-color); font-size: 16px; padding: 10px 20px; display: inline-block;">Сначала выберите критерий слева!</div>';
-      puzzleMessage.style.display = 'block';
-      setTimeout(() => { puzzleMessage.style.display = 'none'; }, 2000);
+      if (window.innerWidth <= 900) {
+        openMobileModal('Внимание', 'Сначала выберите критерий (сверху), а затем пример (снизу).');
+      } else {
+        puzzleMessage.innerHTML = '<div class="callout" style="background: var(--accent-coral); color: white; border-color: var(--border-color); font-size: 16px; padding: 10px 20px; display: inline-block;">Сначала выберите критерий слева!</div>';
+        puzzleMessage.style.display = 'block';
+        setTimeout(() => { puzzleMessage.style.display = 'none'; }, 2000);
+      }
       return;
     }
 
@@ -1668,19 +1632,28 @@
       puzzleMessage.style.display = 'none';
 
       if (matchedPairs === totalPairs) {
-        // Показываем ОС при полном успехе
-        puzzleMessage.innerHTML = `
-          <div class="callout" style="background: var(--secondary-bg); border-color: var(--primary); font-size: 18px; padding: 12px 24px; display: inline-block; margin: 0 auto; animation: popIn 0.4s ease;">
-            🎉 <strong>Отлично!</strong> Вы соединили все пары. Теперь вы знаете, что считается лишним.
-          </div>
-        `;
-        puzzleMessage.style.display = 'block';
+        if (window.innerWidth <= 900) {
+          // Мобильная ОС (Модалка без иконок)
+          openMobileModal('Отлично!', 'Вы соединили все пары. Теперь вы знаете, что считается лишним.');
+        } else {
+          // Десктопная ОС (Плашка)
+          puzzleMessage.innerHTML = `
+            <div class="callout" style="background: var(--secondary-bg); border-color: var(--primary); font-size: 18px; padding: 12px 24px; display: inline-block; margin: 0 auto; animation: popIn 0.4s ease;">
+              <strong>Отлично!</strong> Вы соединили все пары. Теперь вы знаете, что считается лишним.
+            </div>
+          `;
+          puzzleMessage.style.display = 'block';
+        }
         if (currentSlideIndex === 9) nextBtn.disabled = false;
       }
     } else {
       el.classList.add('wrong');
-      puzzleMessage.innerHTML = '<div class="callout" style="background: var(--accent-coral); color: white; border-color: var(--border-color); font-size: 16px; padding: 10px 20px; display: inline-block;">Неверно. Попробуйте еще раз.</div>';
-      puzzleMessage.style.display = 'block';
+      if (window.innerWidth <= 900) {
+        openMobileModal('Неверно', 'Попробуйте еще раз.');
+      } else {
+        puzzleMessage.innerHTML = '<div class="callout" style="background: var(--accent-coral); color: white; border-color: var(--border-color); font-size: 16px; padding: 10px 20px; display: inline-block;">Неверно. Попробуйте еще раз.</div>';
+        puzzleMessage.style.display = 'block';
+      }
       
       setTimeout(() => {
         el.classList.remove('wrong');
